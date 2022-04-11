@@ -69,16 +69,16 @@ namespace FM_API.Controllers
             return Ok(_mapper.Map<IEnumerable<UsuarioResponseDTO>>(usuarios.ToList()));
         }
 
-        [HttpPost("loging")]
-        public async Task<IActionResult> Loging(UsuarioLoginDTO entity)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UsuarioLoginDTO entity)
         {
 
 
             Usuario usuario = await _repository.Get(item => item.Correo == entity.Correo);
 
+            if (usuario == null) return BadRequest("Correo invalido");
             bool verified = BCrypt.Net.BCrypt.Verify(entity.Contrasegna, usuario.Contrasegna);
             if (!verified) return BadRequest("La contraseña es incorrecta");
-            if (usuario == null) return BadRequest("Correo invalido");
 
             usuario.rol = await _rolRepository.Get(item => item.Id == usuario.Id_rol);
 
