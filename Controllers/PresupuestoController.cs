@@ -22,7 +22,7 @@ namespace FM_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(PresupuestoDTO entity)
         {
-            var result = await _repository.Create(_mapper.Map<Presupuesto>(entity));
+            var result = await _repository.Create(_mapper.Map<Budget>(entity));
             return Ok(result);
         }
         [HttpDelete]
@@ -34,21 +34,21 @@ namespace FM_API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            IEnumerable<Presupuesto> result = await _repository.GetAll();
+            IEnumerable<Budget> result = await _repository.GetAll();
             return Ok(_mapper.Map<IEnumerable<PresupuestoDTO>>(result.ToList()));
         }
 
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-            Presupuesto result = await _repository.Get(item => item.Id == id);
+            Budget result = await _repository.Get(item => item.Id == id);
             return Ok(_mapper.Map<PresupuestoDTO>(result));
         }
 
         [HttpPut]
         public async Task Update(PresupuestoDTO entity)
         {
-            await _repository.Update(_mapper.Map<Presupuesto>(entity));
+            await _repository.Update(_mapper.Map<Budget>(entity));
         }
     }
 }

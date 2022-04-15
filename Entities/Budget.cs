@@ -4,7 +4,7 @@
 
 namespace FM_API.Entities
 {
-    public class Presupuesto
+    public class Budget
     {
         [Key]
         public long Id { get; set; }
@@ -13,8 +13,8 @@ namespace FM_API.Entities
 
         public int Agno { get; set; }
 
-        public virtual ICollection<Transacciones> Transacciones { get; set; }
+        public virtual ICollection<Transaction> Transacciones { get; set; }
 
-        public virtual ICollection<Estimaciones> Estimaciones { get; set; }
+        public virtual ICollection<Estimate> Estimaciones { get; set; }
     }
 }

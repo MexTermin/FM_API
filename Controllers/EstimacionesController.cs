@@ -8,21 +8,21 @@ namespace FM_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class EstimacionesController : ControllerBase, IGenericCRUD<EstimacionesDTO>
+    public class EstimacionesController : ControllerBase, IGenericCRUD<EstimacionDTO>
     {
-        protected EstimacionesRepository _repository;
+        protected EstimacionRepository _repository;
         protected IMapper _mapper;
 
-        public EstimacionesController(EstimacionesRepository repository, IMapper mapper)
+        public EstimacionesController(EstimacionRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(EstimacionesDTO entity)
+        public async Task<IActionResult> Create(EstimacionDTO entity)
         {
-            var result = await _repository.Create(_mapper.Map<Estimaciones>(entity));
+            var result = await _repository.Create(_mapper.Map<Estimate>(entity));
             return Ok(result);
         }
         [HttpDelete]
@@ -34,21 +34,21 @@ namespace FM_API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            IEnumerable<Estimaciones> result = await _repository.GetAll();
-            return Ok(_mapper.Map<IEnumerable<EstimacionesDTO>>(result.ToList()));
+            IEnumerable<Estimate> result = await _repository.GetAll();
+            return Ok(_mapper.Map<IEnumerable<EstimacionDTO>>(result.ToList()));
         }
 
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-            Estimaciones result = await _repository.Get(item => item.Id == id);
-            return Ok(_mapper.Map<EstimacionesDTO>(result));
+            Estimate result = await _repository.Get(item => item.Id == id);
+            return Ok(_mapper.Map<EstimacionDTO>(result));
         }
 
         [HttpPut]
-        public async Task Update(EstimacionesDTO entity)
+        public async Task Update(EstimacionDTO entity)
         {
-            await _repository.Update(_mapper.Map<Estimaciones>(entity));
+            await _repository.Update(_mapper.Map<Estimate>(entity));
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace FM_API.DTOS
 {
-    public class IngresosDTO
+    public class IngresoDTO
     {
         public long Id { get; set; }
 

@@ -4,7 +4,7 @@
 
 namespace FM_API.Entities
 {
-    public class Gastos
+    public class Spent
     {
         [Key]
         public long Id { get; set; }

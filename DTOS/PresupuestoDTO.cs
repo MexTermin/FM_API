@@ -10,8 +10,8 @@ namespace FM_API.DTOS
 
         public int Agno { get; set; }
 
-        public ICollection<TransaccionesDTO> Transacciones { get; set; }
+        public ICollection<TransaccionDTO> Transacciones { get; set; }
 
-        public ICollection<EstimacionesDTO> Estimaciones { get; set; }
+        public ICollection<EstimacionDTO> Estimaciones { get; set; }
     }
 }

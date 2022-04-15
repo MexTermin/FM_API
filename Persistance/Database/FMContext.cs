@@ -10,13 +10,13 @@ namespace FM_API.Persistance.Database
         public FMContext(DbContextOptions<FMContext> options) : base(options)
         { }
             #region dbSets
-            public virtual DbSet<Estimaciones> Estimaciones { get; set; }
-            public virtual DbSet<Gastos> Gastos { get; set; }
-            public virtual DbSet<Ingresos> Ingresos { get; set; }
-            public virtual DbSet<Presupuesto> Presupuesto { get; set; }
+            public virtual DbSet<Estimate> Estimaciones { get; set; }
+            public virtual DbSet<Spent> Gastos { get; set; }
+            public virtual DbSet<Income> Ingresos { get; set; }
+            public virtual DbSet<Budget> Presupuesto { get; set; }
             public virtual DbSet<Rol> Rol { get; set; }
-            public virtual DbSet<Transacciones> Transacciones { get; set; }
-            public virtual DbSet<Usuario> Usuario { get; set; }
+            public virtual DbSet<Transaction> Transacciones { get; set; }
+            public virtual DbSet<User> Usuario { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,13 +24,13 @@ namespace FM_API.Persistance.Database
             modelBuilder.HasDefaultSchema("public");
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Estimaciones>().ToTable("estimaciones");
-            modelBuilder.Entity<Gastos>().ToTable("gastos");
-            modelBuilder.Entity<Ingresos>().ToTable("ingresos");
-            modelBuilder.Entity<Presupuesto>().ToTable("presupuesto");
+            modelBuilder.Entity<Estimate>().ToTable("estimaciones");
+            modelBuilder.Entity<Spent>().ToTable("gastos");
+            modelBuilder.Entity<Income>().ToTable("ingresos");
+            modelBuilder.Entity<Budget>().ToTable("presupuesto");
             modelBuilder.Entity<Rol>().ToTable("rol");
-            modelBuilder.Entity<Transacciones>().ToTable("transacciones");
-            modelBuilder.Entity<Usuario>().ToTable("usuario");
+            modelBuilder.Entity<Transaction>().ToTable("transacciones");
+            modelBuilder.Entity<User>().ToTable("usuario");
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace FM_API.Entities
 {
-    public class Ingresos
+    public class Income
     {
         [Key]
         public long Id { get; set; }

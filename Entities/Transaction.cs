@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FM_API.Entities
 {
-    public class Transacciones
+    public class Transaction
     {
         [Key]
         public long Id { get; set; }
@@ -23,12 +23,12 @@ namespace FM_API.Entities
         public long Id_ingresos { get; set; }
 
         [ForeignKey("Id_presupuesto")]
-        public virtual Presupuesto Presupuesto { get; set; }
+        public virtual Budget Presupuesto { get; set; }
 
         [ForeignKey("Id_gastos")]
-        public virtual ICollection<Gastos> Gastos { get; set; }
+        public virtual ICollection<Spent> Gastos { get; set; }
 
         [ForeignKey("Id_ingresos")]
-        public virtual ICollection<Ingresos> Ingresos { get; set; }
+        public virtual ICollection<Income> Ingresos { get; set; }
     }
 }

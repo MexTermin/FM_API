@@ -8,21 +8,21 @@ namespace FM_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TransaccionesController : ControllerBase, IGenericCRUD<TransaccionesDTO>
+    public class TransaccionesController : ControllerBase, IGenericCRUD<TransaccionDTO>
     {
-        protected TransaccionesRepository _repository;
+        protected TransaccionRepository _repository;
         protected IMapper _mapper;
 
-        public TransaccionesController(TransaccionesRepository repository, IMapper mapper)
+        public TransaccionesController(TransaccionRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(TransaccionesDTO entity)
+        public async Task<IActionResult> Create(TransaccionDTO entity)
         {
-            var result = await _repository.Create(_mapper.Map<Transacciones>(entity));
+            var result = await _repository.Create(_mapper.Map<Transaction>(entity));
             return Ok(result);
         }
         [HttpDelete]
@@ -34,21 +34,21 @@ namespace FM_API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            IEnumerable<Transacciones> result = await _repository.GetAll();
-            return Ok(_mapper.Map<IEnumerable<TransaccionesDTO>>(result.ToList()));
+            IEnumerable<Transaction> result = await _repository.GetAll();
+            return Ok(_mapper.Map<IEnumerable<TransaccionDTO>>(result.ToList()));
         }
 
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-            Transacciones result = await _repository.Get(item => item.Id == id);
-            return Ok(_mapper.Map<TransaccionesDTO>(result));
+            Transaction result = await _repository.Get(item => item.Id == id);
+            return Ok(_mapper.Map<TransaccionDTO>(result));
         }
 
         [HttpPut]
-        public async Task Update(TransaccionesDTO entity)
+        public async Task Update(TransaccionDTO entity)
         {
-            await _repository.Update(_mapper.Map<Transacciones>(entity));
+            await _repository.Update(_mapper.Map<Transaction>(entity));
         }
     }
 }

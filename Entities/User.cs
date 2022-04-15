@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FM_API.Entities
 {
-    public class Usuario
+    public class User
     {
         [Key]
         public long Id { get; set; }

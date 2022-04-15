@@ -34,7 +34,7 @@ namespace FM_API.Controllers
 
             entity.Contrasegna = BCrypt.Net.BCrypt.HashPassword(entity.Contrasegna); // Encriptacion de la contraseña
 
-            var usuario = await _repository.Create(_mapper.Map<Usuario>(entity));
+            var usuario = await _repository.Create(_mapper.Map<User>(entity));
             usuario.rol = await _rolRepository.Get(item => item.Id == usuario.Id_rol);
             return Ok(_mapper.Map<UsuarioResponseDTO>(usuario));
         }
@@ -47,13 +47,13 @@ namespace FM_API.Controllers
         [HttpPut]
         public async Task Update(UsuarioDTO entity)
         {
-            await _repository.Update(_mapper.Map<Usuario>(entity));
+            await _repository.Update(_mapper.Map<User>(entity));
         }
 
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-            Usuario usuario = await _repository.Get(item => item.Id == id);
+            User usuario = await _repository.Get(item => item.Id == id);
             usuario.rol = await _rolRepository.Get(item => item.Id == usuario.Id_rol);
             return Ok(_mapper.Map<UsuarioResponseDTO>(usuario));
         }
@@ -61,7 +61,7 @@ namespace FM_API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            IEnumerable<Usuario> usuarios = await _repository.GetAll();
+            IEnumerable<User> usuarios = await _repository.GetAll();
             foreach (var usuario in usuarios)
             {
                 usuario.rol = await _rolRepository.Get(item => item.Id == usuario.Id_rol);
@@ -74,11 +74,11 @@ namespace FM_API.Controllers
         {
 
 
-            Usuario usuario = await _repository.Get(item => item.Correo == entity.Correo);
+            User usuario = await _repository.Get(item => item.Correo == entity.Correo);
 
-            if (usuario == null) return BadRequest("Correo invalido");
+            if (usuario == null) return BadRequest("Correo ó contraseña inválido");
             bool verified = BCrypt.Net.BCrypt.Verify(entity.Contrasegna, usuario.Contrasegna);
-            if (!verified) return BadRequest("La contraseña es incorrecta");
+            if (!verified) return BadRequest("Correo ó contraseña inválido");
 
             usuario.rol = await _rolRepository.Get(item => item.Id == usuario.Id_rol);
 
@@ -108,7 +108,7 @@ namespace FM_API.Controllers
 
         private async Task<bool> EmailExist(string email)
         {
-            Usuario usuario = await _repository.Get(item => item.Correo == email);
+            User usuario = await _repository.Get(item => item.Correo == email);
             return usuario != null;
         }
 

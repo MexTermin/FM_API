@@ -2,7 +2,7 @@
 
 namespace FM_API.DTOS
 {
-    public class TransaccionesDTO
+    public class TransaccionDTO
     {
         public long Id { get; set; }
 
@@ -20,8 +20,8 @@ namespace FM_API.DTOS
 
         public PresupuestoDTO Presupuesto { get; set; }
 
-        public ICollection<GastosDTO> Gastos { get; set; }
+        public ICollection<GastoDTO> Gastos { get; set; }
 
-        public ICollection<IngresosDTO> Ingresos { get; set; }
+        public ICollection<IngresoDTO> Ingresos { get; set; }
     }
 }
