@@ -7,6 +7,6 @@ namespace FM_API.Entities
         [Key]
         public long Id { get; set; }
     
-        public int Monto { get; set; }  
+        public int Amount { get; set; }  
     }
 }

@@ -9,13 +9,13 @@ namespace FM_API.Profiles
         {
             AllowNullCollections = true;
 
-            CreateMap<Estimate, EstimacionDTO>().ReverseMap();
-            CreateMap<Spent, GastoDTO>().ReverseMap();
-            CreateMap<Income, IngresoDTO>().ReverseMap();
-            CreateMap<Budget, PresupuestoDTO>().ReverseMap();
+            CreateMap<Estimate, EstimateDTO>().ReverseMap();
+            CreateMap<Spent, SpentDTO>().ReverseMap();
+            CreateMap<Income, IncomeDTO>().ReverseMap();
+            CreateMap<Budget, BudgetDTO>().ReverseMap();
             CreateMap<Rol, RolDTO>().ReverseMap();
-            CreateMap<Transaction, TransaccionDTO>().ReverseMap();
-            CreateMap<User, UsuarioDTO>().ReverseMap();
+            CreateMap<Transaction, TransactionDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, UsuarioResponseDTO>().ReverseMap();
         }
     }

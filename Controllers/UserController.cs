@@ -12,14 +12,14 @@ namespace FM_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UsuariosController : ControllerBase, IGenericCRUD<UsuarioDTO>
+    public class UserController : ControllerBase, IGenericCRUD<UserDTO>
     {
-        protected UsuarioRepository _repository;
+        protected UserRepository _repository;
         protected RolRepository _rolRepository;
         protected IMapper _mapper;
         public IConfiguration _configuration;
 
-        public UsuariosController(UsuarioRepository repository, IMapper mapper, RolRepository rol, IConfiguration configuration)
+        public UserController(UserRepository repository, IMapper mapper, RolRepository rol, IConfiguration configuration)
         {
             _repository = repository;
             _mapper = mapper;
@@ -28,7 +28,7 @@ namespace FM_API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UsuarioDTO entity)
+        public async Task<IActionResult> Create(UserDTO entity)
         {
             if (await EmailExist(entity.Correo)) return BadRequest("El correo ya está en uso");
 
@@ -45,7 +45,7 @@ namespace FM_API.Controllers
         }
 
         [HttpPut]
-        public async Task Update(UsuarioDTO entity)
+        public async Task Update(UserDTO entity)
         {
             await _repository.Update(_mapper.Map<User>(entity));
         }

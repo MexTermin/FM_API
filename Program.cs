@@ -51,13 +51,13 @@ builder.Services.AddDbContext<DbContext, FMContext>(options => options.UseNpgsql
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 #region Region Repository
-builder.Services.AddTransient<EstimacionRepository>();
-builder.Services.AddTransient<GastoRepository>();
-builder.Services.AddTransient<IngresoRepository>();
-builder.Services.AddTransient<PresupuestoRepository>();
+builder.Services.AddTransient<EstimateRepository>();
+builder.Services.AddTransient<SpentRepository>();
+builder.Services.AddTransient<IncomeRepository>();
+builder.Services.AddTransient<BudgetRepository>();
 builder.Services.AddTransient<RolRepository>();
-builder.Services.AddTransient<TransaccionRepository>();
-builder.Services.AddTransient<UsuarioRepository>();
+builder.Services.AddTransient<TransactionRepository>();
+builder.Services.AddTransient<UserRepository>();
 #endregion
 
 var app = builder.Build();

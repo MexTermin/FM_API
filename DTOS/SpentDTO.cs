@@ -2,11 +2,11 @@
 
 namespace FM_API.DTOS
 {
-    public class GastoDTO
+    public class SpentDTO
     {
         public long Id { get; set; }
 
-        public int Monto { get; set; }
+        public int Amount { get; set; }
     }
 }
 

@@ -11,15 +11,15 @@ namespace FM_API.Entities
         public long Id { get; set; }
 
         [Required]
-        public string Contrasegna { get; set; }
+        public string Pass { get; set; }
 
 
         [Required]
-        public string Correo { get; set; }
+        public string Email { get; set; }
 
-        public string Nombres { get; set; }
+        public string Name { get; set; }
 
-        public string Apellidos { get; set; }
+        public string Lastname { get; set; }
 
         public long Id_rol { get; set; }
 

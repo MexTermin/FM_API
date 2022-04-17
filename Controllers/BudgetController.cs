@@ -8,21 +8,21 @@ namespace FM_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class GastosController : ControllerBase, IGenericCRUD<GastoDTO>
+    public class BudgetController : ControllerBase, IGenericCRUD<BudgetDTO>
     {
-        protected GastoRepository _repository;
+        protected BudgetRepository _repository;
         protected IMapper _mapper;
 
-        public GastosController(GastoRepository repository, IMapper mapper)
+        public BudgetController(BudgetRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(GastoDTO entity)
+        public async Task<IActionResult> Create(BudgetDTO entity)
         {
-            var result = await _repository.Create(_mapper.Map<Spent>(entity));
+            var result = await _repository.Create(_mapper.Map<Budget>(entity));
             return Ok(result);
         }
         [HttpDelete]
@@ -34,22 +34,21 @@ namespace FM_API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            IEnumerable<Spent> result = await _repository.GetAll();
-            return Ok(_mapper.Map<IEnumerable<UsuarioDTO>>(result.ToList()));
+            IEnumerable<Budget> result = await _repository.GetAll();
+            return Ok(_mapper.Map<IEnumerable<BudgetDTO>>(result.ToList()));
         }
 
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-            Spent result = await _repository.Get(item => item.Id == id);
-            return Ok(_mapper.Map<GastoDTO>(result));
+            Budget result = await _repository.Get(item => item.Id == id);
+            return Ok(_mapper.Map<BudgetDTO>(result));
         }
 
         [HttpPut]
-        public async Task Update(GastoDTO entity)
+        public async Task Update(BudgetDTO entity)
         {
-            await _repository.Update(_mapper.Map<Spent>(entity));
+            await _repository.Update(_mapper.Map<Budget>(entity));
         }
-
     }
 }

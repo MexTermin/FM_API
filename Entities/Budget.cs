@@ -9,12 +9,12 @@ namespace FM_API.Entities
         [Key]
         public long Id { get; set; }
 
-        public int Mes { get; set; }
+        public int Month { get; set; }
 
-        public int Agno { get; set; }
+        public int Year { get; set; }
 
-        public virtual ICollection<Transaction> Transacciones { get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; }
 
-        public virtual ICollection<Estimate> Estimaciones { get; set; }
+        public virtual ICollection<Estimate> Estimates { get; set; }
     }
 }

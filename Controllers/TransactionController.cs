@@ -8,21 +8,21 @@ namespace FM_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class IngresosController : ControllerBase, IGenericCRUD<IngresoDTO>
+    public class TransactionController : ControllerBase, IGenericCRUD<TransactionDTO>
     {
-        protected IngresoRepository _repository;
+        protected TransactionRepository _repository;
         protected IMapper _mapper;
 
-        public IngresosController(IngresoRepository repository, IMapper mapper)
+        public TransactionController(TransactionRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(IngresoDTO entity)
+        public async Task<IActionResult> Create(TransactionDTO entity)
         {
-            var result = await _repository.Create(_mapper.Map<Income>(entity));
+            var result = await _repository.Create(_mapper.Map<Transaction>(entity));
             return Ok(result);
         }
         [HttpDelete]
@@ -34,21 +34,21 @@ namespace FM_API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            IEnumerable<Income> result = await _repository.GetAll();
-            return Ok(_mapper.Map<IEnumerable<IngresoDTO>>(result.ToList()));
+            IEnumerable<Transaction> result = await _repository.GetAll();
+            return Ok(_mapper.Map<IEnumerable<TransactionDTO>>(result.ToList()));
         }
 
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-            Income result = await _repository.Get(item => item.Id == id);
-            return Ok(_mapper.Map<IngresoDTO>(result));
+            Transaction result = await _repository.Get(item => item.Id == id);
+            return Ok(_mapper.Map<TransactionDTO>(result));
         }
 
         [HttpPut]
-        public async Task Update(IngresoDTO entity)
+        public async Task Update(TransactionDTO entity)
         {
-            await _repository.Update(_mapper.Map<Income>(entity));
+            await _repository.Update(_mapper.Map<Transaction>(entity));
         }
     }
 }

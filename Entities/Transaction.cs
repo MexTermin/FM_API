@@ -10,25 +10,25 @@ namespace FM_API.Entities
         [Key]
         public long Id { get; set; }
 
-        public string Categoria { get; set; }
+        public string Category { get; set; }
 
-        public string Descripcion { get; set; }
+        public string Description { get; set; }
 
-        public int Importe { get; set; }
+        public int Amount { get; set; } // importe
 
-        public long Id_presupuesto { get; set; }
+        public long Id_budget { get; set; }
 
-        public long Id_gastos { get; set; }
+        public long Id_spent { get; set; }
 
-        public long Id_ingresos { get; set; }
+        public long Id_income { get; set; }
 
-        [ForeignKey("Id_presupuesto")]
-        public virtual Budget Presupuesto { get; set; }
+        [ForeignKey("Id_budget")]
+        public virtual Budget Budget { get; set; }
 
-        [ForeignKey("Id_gastos")]
-        public virtual ICollection<Spent> Gastos { get; set; }
+        [ForeignKey("Id_spent")]
+        public virtual ICollection<Spent> Expenses { get; set; }
 
-        [ForeignKey("Id_ingresos")]
-        public virtual ICollection<Income> Ingresos { get; set; }
+        [ForeignKey("Id_income")]
+        public virtual ICollection<Income> Income { get; set; }
     }
 }
