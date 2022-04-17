@@ -30,9 +30,9 @@ namespace FM_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserDTO entity)
         {
-            if (await EmailExist(entity.Correo)) return BadRequest("El correo ya está en uso");
+            if (await EmailExist(entity.Email)) return BadRequest("El correo ya está en uso");
 
-            entity.Contrasegna = BCrypt.Net.BCrypt.HashPassword(entity.Contrasegna); // Encriptacion de la contraseña
+            entity.Pass = BCrypt.Net.BCrypt.HashPassword(entity.Pass); // Encriptacion de la contraseña
 
             var usuario = await _repository.Create(_mapper.Map<User>(entity));
             usuario.rol = await _rolRepository.Get(item => item.Id == usuario.Id_rol);
@@ -74,10 +74,10 @@ namespace FM_API.Controllers
         {
 
 
-            User usuario = await _repository.Get(item => item.Correo == entity.Correo);
+            User usuario = await _repository.Get(item => item.Email == entity.Email);
 
             if (usuario == null) return BadRequest("Correo ó contraseña inválido");
-            bool verified = BCrypt.Net.BCrypt.Verify(entity.Contrasegna, usuario.Contrasegna);
+            bool verified = BCrypt.Net.BCrypt.Verify(entity.Pass, usuario.Pass);
             if (!verified) return BadRequest("Correo ó contraseña inválido");
 
             usuario.rol = await _rolRepository.Get(item => item.Id == usuario.Id_rol);
@@ -88,10 +88,10 @@ namespace FM_API.Controllers
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                         new Claim("UserId", usuario.Id.ToString()),
-                        new Claim("DisplayName", $"{usuario.Nombres} {usuario.Apellidos}"),
-                        new Claim("UserName", usuario.Nombres),
+                        new Claim("DisplayName", $"{usuario.Name} {usuario.Lastname}"),
+                        new Claim("UserName", usuario.Name),
                         new Claim("Rol", usuario.rol.Rol_type),
-                        new Claim("Email", usuario.Correo)
+                        new Claim("Email", usuario.Email)
                     };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -108,7 +108,7 @@ namespace FM_API.Controllers
 
         private async Task<bool> EmailExist(string email)
         {
-            User usuario = await _repository.Get(item => item.Correo == email);
+            User usuario = await _repository.Get(item => item.Email == email);
             return usuario != null;
         }
 
