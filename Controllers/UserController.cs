@@ -71,7 +71,12 @@ namespace FM_API.Controllers
         {
             try
             {
-                await _repository.Update(_mapper.Map<User>(entity));
+                if (entity.Pass != null)
+                {
+                    entity.Pass = BCrypt.Net.BCrypt.HashPassword(entity.Pass);
+                }
+              
+                await _repository.UpdateUser(_mapper.Map<User>(entity));
                 ResponseHelper response = new(MessageHelper.SuccessMessage.MaUpdated);
                 return Ok(response);
             }
@@ -130,7 +135,7 @@ namespace FM_API.Controllers
 
                 if (usuario == null) return BadRequest(new ResponseHelper("Correo ó contraseña inválido", error: true));
                 bool verified = BCrypt.Net.BCrypt.Verify(entity.Pass, usuario.Pass);
-                if (!verified) return BadRequest(new ResponseHelper("Correo ó contraseña inválido", error: true));
+                if (!verified) return BadRequest(new ResponseHelper("Correo ó contraseña inválidosss", error: true));
 
                 usuario.Rol = await _rolRepository.Get(item => item.Id == usuario.Id_rol);
 

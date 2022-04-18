@@ -46,7 +46,7 @@ builder.Services.AddControllers().AddJsonOptions(option =>
 {
     option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
-
+ 
 builder.Services.AddDbContext<DbContext, FMContext>(options => options.UseNpgsql(dbconnection));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
