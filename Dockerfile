@@ -24,4 +24,4 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "FMAPI.dll"]
 CMD ASPNETCORE_URLS=http://*:$PORT dotnet "FMAPI.dll"
-ENV FMDATABASE=Server=ec2-34-197-84-74.compute-1.amazonaws.com;Port=5432;Database=dq34fm9ciuq20;Username=rwegurcoytxmjt;Password=4f2fee4c78abf0e486b0c64ed6e2a9dd201cdec0821b602294c83e93fdbc99dc 
+ENV FMDATABASE=Server=ec2-52-3-200-138.compute-1.amazonaws.com;Port=5432;Database=d503fi3sdgn8s7;Username=xcqzjwldzbjawo;Password=4f995f25c04955345b5c27df5ae2c3471eb7261dd19ecc3da195ec6c1b2647e6
