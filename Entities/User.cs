@@ -13,7 +13,6 @@ namespace FM_API.Entities
         [Required]
         public string Pass { get; set; }
 
-
         [Required]
         public string Email { get; set; }
 
@@ -24,7 +23,7 @@ namespace FM_API.Entities
         public long Id_rol { get; set; }
 
         [ForeignKey("Id_rol")]
-        public virtual Rol rol { get; set; }
+        public virtual Rol Rol { get; set; }
 
     }
 }

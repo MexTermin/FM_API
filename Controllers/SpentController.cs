@@ -2,6 +2,7 @@
 using FM_API.DTOS;
 using FM_API.Persistance.Repositories;
 using FM_API.Persistance.Repositories.Shared;
+using FMAPI.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FM_API.Controllers
@@ -22,33 +23,81 @@ namespace FM_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(SpentDTO entity)
         {
-            var result = await _repository.Create(_mapper.Map<Spent>(entity));
-            return Ok(result);
+            try
+            {
+                var result = await _repository.Create(_mapper.Map<Spent>(entity));
+                ResponseHelper<SpentDTO> response = new(MessageHelper.SuccessMessage.MaCreate, _mapper.Map<SpentDTO>(result));
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
+
         [HttpDelete]
-        public async Task Delete(long idEntity)
+        public async Task<IActionResult> Delete(long idEntity)
         {
-            await _repository.Delete(idEntity);
+            try
+            {
+                await _repository.Delete(idEntity);
+                ResponseHelper response = new(MessageHelper.SuccessMessage.MaDelete);
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            IEnumerable<Spent> result = await _repository.GetAll();
-            return Ok(_mapper.Map<IEnumerable<UserDTO>>(result.ToList()));
+            try
+            {
+                IEnumerable<Spent> result = await _repository.GetAll();
+                ResponseHelper<IEnumerable<Spent>> response = new("", _mapper.Map<IEnumerable<Spent>>(result.ToList()));
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
 
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-            Spent result = await _repository.Get(item => item.Id == id);
-            return Ok(_mapper.Map<SpentDTO>(result));
+            try
+            {
+                Spent result = await _repository.Get(item => item.Id == id);
+                ResponseHelper<Spent> response = new("", _mapper.Map<Spent>(result));
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
 
         [HttpPut]
-        public async Task Update(SpentDTO entity)
+        public async Task<IActionResult> Update(SpentDTO entity)
         {
-            await _repository.Update(_mapper.Map<Spent>(entity));
+            try
+            {
+                await _repository.Update(_mapper.Map<Spent>(entity));
+                ResponseHelper response = new(MessageHelper.SuccessMessage.MaUpdated);
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
 
     }

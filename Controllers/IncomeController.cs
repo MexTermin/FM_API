@@ -3,6 +3,7 @@ using FM_API.DTOS;
 using FM_API.Persistance.Repositories;
 using FM_API.Persistance.Repositories.Shared;
 using Microsoft.AspNetCore.Mvc;
+using FMAPI.Helpers;
 
 namespace FM_API.Controllers
 {
@@ -22,33 +23,80 @@ namespace FM_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(IncomeDTO entity)
         {
-            var result = await _repository.Create(_mapper.Map<Income>(entity));
-            return Ok(result);
+            try
+            {
+                Income result = await _repository.Create(_mapper.Map<Income>(entity));
+                ResponseHelper<IncomeDTO> response = new(MessageHelper.SuccessMessage.MaCreate, _mapper.Map<IncomeDTO>(result));
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
         [HttpDelete]
-        public async Task Delete(long idEntity)
+        public async Task<IActionResult> Delete(long idEntity)
         {
-            await _repository.Delete(idEntity);
+            try
+            {
+                await _repository.Delete(idEntity);
+                ResponseHelper response = new(MessageHelper.SuccessMessage.MaDelete);
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            IEnumerable<Income> result = await _repository.GetAll();
-            return Ok(_mapper.Map<IEnumerable<IncomeDTO>>(result.ToList()));
+            try
+            {
+                IEnumerable<Income> result = await _repository.GetAll();
+                ResponseHelper<IEnumerable<IncomeDTO>> response = new("", _mapper.Map<IEnumerable<IncomeDTO>>(result.ToList()));
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
 
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-            Income result = await _repository.Get(item => item.Id == id);
-            return Ok(_mapper.Map<IncomeDTO>(result));
+            try
+            {
+                Income result = await _repository.Get(item => item.Id == id);
+                ResponseHelper<IncomeDTO> response = new("", _mapper.Map<IncomeDTO>(result));
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
 
         [HttpPut]
-        public async Task Update(IncomeDTO entity)
+        public async Task<IActionResult> Update(IncomeDTO entity)
         {
-            await _repository.Update(_mapper.Map<Income>(entity));
+            try
+            {
+                await _repository.Update(_mapper.Map<Income>(entity));
+                ResponseHelper response = new(MessageHelper.SuccessMessage.MaUpdated);
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 namespace FM_API.Persistance.Repositories.Shared
 {
@@ -8,7 +7,7 @@ namespace FM_API.Persistance.Repositories.Shared
         public Task<IActionResult> Create(T entity);
         public Task<IActionResult> GetById(long IdEntity);
         public Task<IActionResult> Get();
-        public Task Update(T entity);
-        public Task Delete(long idEntity);
+        public Task<IActionResult> Update(T entity);
+        public Task<IActionResult> Delete(long idEntity);
     }
 }

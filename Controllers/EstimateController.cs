@@ -2,6 +2,7 @@
 using FM_API.DTOS;
 using FM_API.Persistance.Repositories;
 using FM_API.Persistance.Repositories.Shared;
+using FMAPI.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FM_API.Controllers
@@ -22,33 +23,82 @@ namespace FM_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(EstimateDTO entity)
         {
-            var result = await _repository.Create(_mapper.Map<Estimate>(entity));
-            return Ok(result);
+            try
+            {
+                var result = await _repository.Create(_mapper.Map<Estimate>(entity));
+                ResponseHelper<EstimateDTO> response = new(MessageHelper.SuccessMessage.FeCreate, _mapper.Map<EstimateDTO>(result));
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
+
         [HttpDelete]
-        public async Task Delete(long idEntity)
+        public async Task<IActionResult> Delete(long idEntity)
         {
-            await _repository.Delete(idEntity);
+            try
+            {
+                await _repository.Delete(idEntity);
+                ResponseHelper response = new(MessageHelper.SuccessMessage.FeDelete);
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            IEnumerable<Estimate> result = await _repository.GetAll();
-            return Ok(_mapper.Map<IEnumerable<EstimateDTO>>(result.ToList()));
+            try
+            {
+                IEnumerable<Estimate> result = await _repository.GetAll();
+                ResponseHelper<IEnumerable<EstimateDTO>> response = new("", _mapper.Map<IEnumerable<EstimateDTO>>(result.ToList()));
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
 
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-            Estimate result = await _repository.Get(item => item.Id == id);
-            return Ok(_mapper.Map<EstimateDTO>(result));
+            try
+            {
+                Estimate result = await _repository.Get(item => item.Id == id);
+                ResponseHelper<EstimateDTO> response = new("", _mapper.Map<EstimateDTO>(result));
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
 
         [HttpPut]
-        public async Task Update(EstimateDTO entity)
+        public async Task<IActionResult> Update(EstimateDTO entity)
         {
-            await _repository.Update(_mapper.Map<Estimate>(entity));
+            try
+            {
+                await _repository.Update(_mapper.Map<Estimate>(entity));
+                ResponseHelper response = new(MessageHelper.SuccessMessage.FeUpdated);
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
     }
 }

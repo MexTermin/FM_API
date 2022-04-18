@@ -2,6 +2,7 @@
 using FM_API.DTOS;
 using FM_API.Persistance.Repositories;
 using FM_API.Persistance.Repositories.Shared;
+using FMAPI.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FM_API.Controllers
@@ -22,33 +23,80 @@ namespace FM_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(RolDTO entity)
         {
-            var result = await _repository.Create(_mapper.Map<Rol>(entity));
-            return Ok(result);
+            try
+            {
+                Rol result = await _repository.Create(_mapper.Map<Rol>(entity));
+                ResponseHelper<RolDTO> response = new(MessageHelper.SuccessMessage.MaCreate, _mapper.Map<RolDTO>(result));
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
         [HttpDelete]
-        public async Task Delete(long idEntity)
+        public async Task<IActionResult> Delete(long idEntity)
         {
-            await _repository.Delete(idEntity);
+            try
+            {
+                await _repository.Delete(idEntity);
+                ResponseHelper response = new(MessageHelper.SuccessMessage.MaDelete);
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            IEnumerable<Rol> result = await _repository.GetAll();
-            return Ok(_mapper.Map<IEnumerable<RolDTO>>(result.ToList()));
+            try
+            {
+                IEnumerable<Rol> result = await _repository.GetAll();
+                ResponseHelper<IEnumerable<RolDTO>> response = new("", _mapper.Map<IEnumerable<RolDTO>>(result.ToList()));
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
 
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-            Rol result = await _repository.Get(item => item.Id == id);
-            return Ok(_mapper.Map<RolDTO>(result));
+            try
+            {
+                Rol result = await _repository.Get(item => item.Id == id);
+                ResponseHelper<RolDTO> response = new("", _mapper.Map<RolDTO>(result));
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
 
         [HttpPut]
-        public async Task Update(RolDTO entity)
+        public async Task<IActionResult> Update(RolDTO entity)
         {
-            await _repository.Update(_mapper.Map<Rol>(entity));
+            try
+            {
+                await _repository.Update(_mapper.Map<Rol>(entity));
+                ResponseHelper response = new(MessageHelper.SuccessMessage.MaUpdated);
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
         }
     }
 }

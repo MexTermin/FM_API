@@ -16,7 +16,7 @@ namespace FM_API.DTOS
 
         public long Id_rol { get; set; }
 
-        public RolDTO rol { get; set; }
+        public RolDTO Rol { get; set; }
     }
 
     public class UsuarioLoginDTO
@@ -35,6 +35,6 @@ namespace FM_API.DTOS
 
         public string Lastname { get; set; }
 
-        public RolDTO rol { get; set; }
+        public RolDTO Rol { get; set; }
     }
 }
