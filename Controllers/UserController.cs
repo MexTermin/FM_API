@@ -34,7 +34,7 @@ namespace FM_API.Controllers
 
             try
             {
-                if (await EmailExist(entity.Email)) return BadRequest("El correo ya está en uso");
+                if (await EmailExist(entity.Email)) return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.EmailAlreadyExits, true));
 
                 entity.Pass = BCrypt.Net.BCrypt.HashPassword(entity.Pass); // Encriptacion de la contraseña
 
@@ -71,11 +71,12 @@ namespace FM_API.Controllers
         {
             try
             {
+                if (await EmailExist(entity.Email, entity.Id)) return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.EmailAlreadyExits, true));
                 if (entity.Pass != null)
                 {
                     entity.Pass = BCrypt.Net.BCrypt.HashPassword(entity.Pass);
                 }
-              
+
                 await _repository.UpdateUser(_mapper.Map<User>(entity));
                 ResponseHelper response = new(MessageHelper.SuccessMessage.MaUpdated);
                 return Ok(response);
@@ -159,7 +160,7 @@ namespace FM_API.Controllers
                     claims,
                     expires: DateTime.UtcNow.AddHours(8),
                     signingCredentials: signIn);
-                ResponseHelper<string> response = new("", new JwtSecurityTokenHandler().WriteToken(token));
+                ResponseHelper<Dictionary<string, dynamic>> response = new("", new Dictionary<string, dynamic>() { { "token", new JwtSecurityTokenHandler().WriteToken(token) }, { "userId", usuario.Id } }); // codigo temporal
 
                 return Ok(response);
             }
@@ -170,9 +171,10 @@ namespace FM_API.Controllers
             }
         }
 
-        private async Task<bool> EmailExist(string email)
+        private async Task<bool> EmailExist(string email, long id = 0)
         {
             User usuario = await _repository.Get(item => item.Email == email);
+            if (id != 0 && usuario.Id == id) return false;
             return usuario != null;
         }
 

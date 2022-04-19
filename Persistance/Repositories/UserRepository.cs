@@ -9,6 +9,7 @@ namespace FM_API.Persistance.Repositories
 
         public async Task UpdateUser(User entity)
         {
+            _DataContext.ChangeTracker.Clear();
             var atEntity = _dbSet.Attach(entity);
             _DataContext.Entry(entity).State = EntityState.Modified;
             if (entity.Pass == null) atEntity.Property("Pass").IsModified = false;

@@ -19,6 +19,7 @@
         public static class ErrorMessage
         {
             public static string GenericError { get; set; } = "Ha ocurrido un error, por favor vuelva a intentarlo";
+            public static string EmailAlreadyExits { get; set; } = "Esta direccion de correo ya se encuentra en uso";
         }
     }
 }
