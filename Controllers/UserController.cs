@@ -160,7 +160,11 @@ namespace FM_API.Controllers
                     claims,
                     expires: DateTime.UtcNow.AddHours(8),
                     signingCredentials: signIn);
-                ResponseHelper<Dictionary<string, dynamic>> response = new("", new Dictionary<string, dynamic>() { { "token", new JwtSecurityTokenHandler().WriteToken(token) }, { "userId", usuario.Id } }); // codigo temporal
+
+                ResponseHelper<Dictionary<string, dynamic>> response = new("", new Dictionary<string, dynamic>() { 
+                    { "token", new JwtSecurityTokenHandler().WriteToken(token) }, 
+                    { "userId", usuario.Id } }
+                ); // codigo temporal
 
                 return Ok(response);
             }
