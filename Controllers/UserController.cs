@@ -161,8 +161,8 @@ namespace FM_API.Controllers
                     expires: DateTime.UtcNow.AddHours(8),
                     signingCredentials: signIn);
 
-                ResponseHelper<Dictionary<string, dynamic>> response = new("", new Dictionary<string, dynamic>() { 
-                    { "token", new JwtSecurityTokenHandler().WriteToken(token) }, 
+                ResponseHelper<Dictionary<string, dynamic>> response = new("", new Dictionary<string, dynamic>() {
+                    { "token", new JwtSecurityTokenHandler().WriteToken(token) },
                     { "userId", usuario.Id } }
                 ); // codigo temporal
 
@@ -178,6 +178,7 @@ namespace FM_API.Controllers
         private async Task<bool> EmailExist(string email, long id = 0)
         {
             User usuario = await _repository.Get(item => item.Email == email);
+            if (usuario == null) return false;
             if (id != 0 && usuario.Id == id) return false;
             return usuario != null;
         }
