@@ -8,6 +8,8 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using FMAPI.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace FM_API.Controllers
 {
@@ -91,13 +93,30 @@ namespace FM_API.Controllers
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById(long id)
         {
-
             try
             {
                 User usuario = await _repository.Get(item => item.Id == id);
                 usuario.Rol = await _rolRepository.Get(item => item.Id == usuario.Id_rol);
                 ResponseHelper<UsuarioResponseDTO> response = new("", _mapper.Map<UsuarioResponseDTO>(usuario));
                 return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
+        }
+
+        [HttpGet("token")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetUserByToken()
+        {
+            try
+            {
+                string userId = (HttpContext.User.Identity as ClaimsIdentity)?.FindFirst("UserId").Value;
+                var user = await GetById(long.Parse(userId));
+
+                return user;
             }
             catch
             {
@@ -132,39 +151,19 @@ namespace FM_API.Controllers
         {
             try
             {
-                User usuario = await _repository.Get(item => item.Email == entity.Email);
+                User user = await _repository.Get(item => item.Email == entity.Email);
 
-                if (usuario == null) return BadRequest(new ResponseHelper("Correo ó contraseña inválido", error: true));
-                bool verified = BCrypt.Net.BCrypt.Verify(entity.Pass, usuario.Pass);
+                if (user == null) return BadRequest(new ResponseHelper("Correo ó contraseña inválido", error: true));
+
+                bool verified = BCrypt.Net.BCrypt.Verify(entity.Pass, user.Pass);
                 if (!verified) return BadRequest(new ResponseHelper("Correo ó contraseña inválidosss", error: true));
 
-                usuario.Rol = await _rolRepository.Get(item => item.Id == usuario.Id_rol);
+                user.Rol = await _rolRepository.Get(item => item.Id == user.Id_rol);
 
-                //create claims details based on the user information
-                var claims = new[] {
-                        new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                        new Claim("UserId", usuario.Id.ToString()),
-                        new Claim("DisplayName", $"{usuario.Name} {usuario.Lastname}"),
-                        new Claim("UserName", usuario.Name),
-                        new Claim("Rol", usuario.Rol.Rol_type),
-                        new Claim("Email", usuario.Email)
-                    };
-
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-                var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                var token = new JwtSecurityToken(
-                    _configuration["Jwt:Issuer"],
-                    _configuration["Jwt:Audience"],
-                    claims,
-                    expires: DateTime.UtcNow.AddHours(8),
-                    signingCredentials: signIn);
 
                 ResponseHelper<Dictionary<string, dynamic>> response = new("", new Dictionary<string, dynamic>() {
-                    { "token", new JwtSecurityTokenHandler().WriteToken(token) },
-                    { "userId", usuario.Id } }
-                ); // codigo temporal
+                    { "token", MakeToken(user, 8) } }
+                );
 
                 return Ok(response);
             }
@@ -181,6 +180,31 @@ namespace FM_API.Controllers
             if (usuario == null) return false;
             if (id != 0 && usuario.Id == id) return false;
             return usuario != null;
+        }
+
+        private string MakeToken(User usuario, int ExpireTime)
+        {
+            //create claims details based on the user information
+            var claims = new[] {
+                        new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                        new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                        new Claim("UserId", usuario.Id.ToString()),
+                        new Claim("DisplayName", $"{usuario.Name} {usuario.Lastname}"),
+                        new Claim("UserName", usuario.Name),
+                        new Claim("Rol", usuario.Rol.Rol_type)
+                    };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                _configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.UtcNow.AddHours(ExpireTime),
+                signingCredentials: signIn);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
     }
