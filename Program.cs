@@ -1,5 +1,5 @@
 using FM_API.Persistance.Database;
-using FM_API.Persistance.Repositories;
+using FMAPI.Persistance.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -59,6 +59,7 @@ builder.Services.AddTransient<BudgetRepository>();
 builder.Services.AddTransient<RolRepository>();
 builder.Services.AddTransient<TransactionRepository>();
 builder.Services.AddTransient<UserRepository>();
+builder.Services.AddTransient<CategoryRepository>();
 #endregion
 
 var app = builder.Build();

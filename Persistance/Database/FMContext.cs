@@ -1,5 +1,5 @@
 ﻿using FM_API.Entities;
-using Microsoft.EntityFrameworkCore;
+using FMAPI.Entities;
 
 #nullable disable
 
@@ -17,6 +17,7 @@ namespace FM_API.Persistance.Database
             public virtual DbSet<Rol> Rol { get; set; }
             public virtual DbSet<Transaction> Transacciones { get; set; }
             public virtual DbSet<User> Usuario { get; set; }
+            public virtual DbSet<Category> Categoria { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,6 +32,7 @@ namespace FM_API.Persistance.Database
             modelBuilder.Entity<Rol>().ToTable("rol");
             modelBuilder.Entity<Transaction>().ToTable("transacciones");
             modelBuilder.Entity<User>().ToTable("usuario");
+            modelBuilder.Entity<Category>().ToTable("categoria");
         }
     }
 }
