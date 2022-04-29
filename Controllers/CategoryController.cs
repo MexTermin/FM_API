@@ -109,6 +109,9 @@ namespace FMAPI.Controllers
         {
             try
             {
+                var previusCategory = await ExistingCategory(entity);
+                if (previusCategory != null && previusCategory.Id != entity.Id) return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.NameAlreadyExits, error: true));
+
                 await _repository.Update(_mapper.Map<Category>(entity));
                 ResponseHelper response = new(MessageHelper.SuccessMessage.FeUpdated);
                 return Ok(response);
