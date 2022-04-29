@@ -10,8 +10,6 @@ namespace FM_API.Entities
         [Key]
         public long Id { get; set; }
 
-        public string Category { get; set; }
-
         public string Description { get; set; }
 
         public int Amount { get; set; } // importe
@@ -21,6 +19,11 @@ namespace FM_API.Entities
         public long Id_spent { get; set; }
 
         public long Id_income { get; set; }
+
+        public long Id_category { get; set; }
+
+        [ForeignKey("Id_category")]
+        public virtual Category Category { get; set; }
 
         [ForeignKey("Id_budget")]
         public virtual Budget Budget { get; set; }

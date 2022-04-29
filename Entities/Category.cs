@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace FMAPI.Entities
 {
@@ -6,8 +8,13 @@ namespace FMAPI.Entities
     {
         [Key]
         public long Id { get; set; }
+
         [Required]
         public string Name { get; set; }
-        public string Description { get; set; }
+
+        public string? Description { get; set; }
+
+        [DefaultValue(false)]
+        public bool Deleted { get; set; }
     }
 }
