@@ -10,6 +10,5 @@ namespace FMAPI.DTOS
 
         public string Description { get; set; }
 
-        public bool Deleted { get; set; }
     }
 }

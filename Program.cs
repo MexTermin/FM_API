@@ -81,4 +81,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run(url);
+app.Run();

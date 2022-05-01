@@ -1,10 +1,9 @@
-﻿using System.ComponentModel;
+﻿using FMAPI.Helpers;
 using System.ComponentModel.DataAnnotations;
-
 
 namespace FMAPI.Entities
 {
-    public class Category
+    public class Category : SoftDelete
     {
         [Key]
         public long Id { get; set; }
@@ -13,8 +12,5 @@ namespace FMAPI.Entities
         public string Name { get; set; }
 
         public string? Description { get; set; }
-
-        [DefaultValue(false)]
-        public bool Deleted { get; set; }
     }
 }

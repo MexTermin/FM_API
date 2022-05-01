@@ -32,13 +32,13 @@ namespace FMAPI.Controllers
                     ResponseHelper<CategoryDTO> response = new(MessageHelper.SuccessMessage.FeCreate, _mapper.Map<CategoryDTO>(result));
                     return Ok(response);
                 }
-                else if (previusCategory.Deleted == false)
+                else if (previusCategory.Deleted_at != null)
                 {
                     return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.NameAlreadyExits, error: true));
                 }
                 else
                 {
-                    previusCategory.Deleted = false;
+                    previusCategory.Deleted_at = null;
                     previusCategory.Description = entity.Description;
 
                     await _repository.Update(previusCategory);
@@ -48,6 +48,7 @@ namespace FMAPI.Controllers
             }
             catch
             {
+                throw;
                 ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
                 return BadRequest(response);
             }
@@ -58,9 +59,9 @@ namespace FMAPI.Controllers
         {
             try
             {
-                var category = await _repository.Get(item => item.Id == idEntity); // Search for a category to do the logical deletion. 
-                category.Deleted = true;
-                await _repository.Update(category);
+                await _repository.Delete(idEntity);// Search for a category to do the logical deletion. 
+                //category.Deleted_at = DateTime.UtcNow;
+                //await _repository.Update(category);
                 ResponseHelper response = new(MessageHelper.SuccessMessage.FeDelete);
                 return Ok(response);
             }
@@ -77,7 +78,7 @@ namespace FMAPI.Controllers
         {
             try
             {
-                IEnumerable<Category> result = await _repository.GetMany(item => item.Deleted == false);
+                IEnumerable<Category> result = await _repository.GetAll();
                 ResponseHelper<IEnumerable<CategoryDTO>> response = new("", _mapper.Map<IEnumerable<CategoryDTO>>(result.ToList()));
                 return Ok(response);
             }
@@ -93,7 +94,7 @@ namespace FMAPI.Controllers
         {
             try
             {
-                Category result = await _repository.Get(item => item.Id == id && item.Deleted == false);
+                Category result = await _repository.Get(item => item.Id == id);
                 ResponseHelper<CategoryDTO> response = new("", _mapper.Map<CategoryDTO>(result));
                 return Ok(response);
             }
