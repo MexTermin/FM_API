@@ -26,7 +26,6 @@ namespace FM_API.Persistance.Database
             base.OnModelCreating(modelBuilder);
 
             // Code for Soft Delete
-            //modelBuilder.Entity<Category>().Property<DateTime>("Deleted_at");
             modelBuilder.Entity<Category>().HasQueryFilter(ent => EF.Property<DateTime?>(ent, "Deleted_at") == null);
 
             modelBuilder.Entity<Estimate>().ToTable("estimaciones");
@@ -40,6 +39,7 @@ namespace FM_API.Persistance.Database
         }
         public override int SaveChanges()
         {
+            
             UpdateSoftDeleteStatuses();
             return base.SaveChanges();
         }
@@ -54,29 +54,27 @@ namespace FM_API.Persistance.Database
         {
             foreach (var entry in ChangeTracker.Entries())
             {
-                switch (entry.State)
+                bool isSoftDelete = false;
+                entry.CurrentValues.TryGetValue("IsSoftDelete", out isSoftDelete);
+                if(isSoftDelete)
                 {
-                    case EntityState.Added:
-                        entry.CurrentValues["Deleted_at"] = null;
-                        entry.CurrentValues["Update_at"] = DateTime.UtcNow;
-                        entry.CurrentValues["Create_at"] = DateTime.UtcNow;
-                        break;
-                    case EntityState.Deleted:
-                        entry.State = EntityState.Modified;
-                        entry.CurrentValues["Deleted_at"] = DateTime.UtcNow;
-                        break;
-                    case EntityState.Modified:
-                        entry.CurrentValues["Update_at"] = DateTime.UtcNow;
-                        break;
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.CurrentValues["Deleted_at"] = null;
+                            entry.CurrentValues["Update_at"] = DateTime.UtcNow;
+                            entry.CurrentValues["Create_at"] = DateTime.UtcNow;
+                            break;
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Modified;
+                            entry.CurrentValues["Deleted_at"] = DateTime.UtcNow;
+                            break;
+                        case EntityState.Modified:
+                            entry.CurrentValues["Update_at"] = DateTime.UtcNow;
+                            break;
+                    }
                 }
             }
-        }
-
-        public static async Task<T> FindWithIgnoreQueryFilters<T>(DbSet<T> source, Expression<Func<T, bool>> predicate)
-            where T : class, new()
-        {
-
-            return await source.IgnoreQueryFilters().SingleOrDefaultAsync(predicate);
         }
     }
 }

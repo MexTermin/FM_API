@@ -10,5 +10,7 @@ namespace FMAPI.Helpers
         public DateTime Create_at { get; set; }
 
         public DateTime? Update_at { get; set; }
+
+        public virtual bool IsSoftDelete { get; } = true;
     }
 }

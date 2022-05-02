@@ -32,7 +32,7 @@ namespace FMAPI.Controllers
                     ResponseHelper<CategoryDTO> response = new(MessageHelper.SuccessMessage.FeCreate, _mapper.Map<CategoryDTO>(result));
                     return Ok(response);
                 }
-                else if (previusCategory.Deleted_at != null)
+                else if (previusCategory.Deleted_at == null)
                 {
                     return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.NameAlreadyExits, error: true));
                 }
@@ -59,9 +59,7 @@ namespace FMAPI.Controllers
         {
             try
             {
-                await _repository.Delete(idEntity);// Search for a category to do the logical deletion. 
-                //category.Deleted_at = DateTime.UtcNow;
-                //await _repository.Update(category);
+                await _repository.Delete(idEntity);
                 ResponseHelper response = new(MessageHelper.SuccessMessage.FeDelete);
                 return Ok(response);
             }
@@ -126,7 +124,7 @@ namespace FMAPI.Controllers
 
         protected async Task<Category?> ExistingCategory(CategoryDTO entity)
         {
-            Category result = await _repository.Get(item => item.Name == entity.Name);
+            Category result = await _repository.GetWithDelete(item => item.Name == entity.Name);
             ResponseHelper<CategoryDTO> response = new("", _mapper.Map<CategoryDTO>(result));
             return result;
         }

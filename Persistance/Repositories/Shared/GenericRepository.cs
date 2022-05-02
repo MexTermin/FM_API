@@ -27,40 +27,53 @@ namespace FM_API.Persistance.Repositories
 
             return entity;
         }
+
         public async Task Update(T entity)
         {
             _dbSet.Attach(entity);
             _DataContext.Entry(entity).State = EntityState.Modified;
             await _DataContext.SaveChangesAsync();
         }
+
         public async Task Delete(long idEntity)
         {
             var entity = _dbSet.Find(idEntity);
             _dbSet.Remove(entity);
             await _DataContext.SaveChangesAsync();
         }
+
         public async Task DeleteAll(Expression<Func<T, bool>> where)
         {
             var entities = await _dbSet.Where(where).ToListAsync();
             _dbSet.RemoveRange(entities);
             await _DataContext.SaveChangesAsync();
         }
+
         public async Task<T> Find(long idEntity)
         {
             return await _dbSet.FindAsync(idEntity);
         }
+
         public async Task<IEnumerable<T>> GetAll()
         {
             return await _dbSet.ToListAsync();
         }
+
         public async Task<IEnumerable<T>> GetMany(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
+
         public async Task<T> Get(Expression<Func<T, bool>> predicate)
         {
-            return await _dbSet.FirstOrDefaultAsync(predicate);
+            return await _dbSet.IgnoreQueryFilters().SingleOrDefaultAsync(predicate);
+        }       
+        
+        public async Task<T> GetWithDelete(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.SingleOrDefaultAsync(predicate);
         }
+
         public async Task<int> Count(Expression<Func<T, bool>> predicate = null)
         {
             if (predicate == null)
