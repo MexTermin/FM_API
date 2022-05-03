@@ -48,7 +48,6 @@ namespace FMAPI.Controllers
             }
             catch
             {
-                throw;
                 ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
                 return BadRequest(response);
             }
@@ -92,7 +91,7 @@ namespace FMAPI.Controllers
         {
             try
             {
-                Category result = await _repository.Get(item => item.Id == id);
+                Category result = await _repository.GetWithDelete(item => item.Id == id);
                 ResponseHelper<CategoryDTO> response = new("", _mapper.Map<CategoryDTO>(result));
                 return Ok(response);
             }

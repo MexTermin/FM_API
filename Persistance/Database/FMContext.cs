@@ -54,8 +54,8 @@ namespace FM_API.Persistance.Database
         {
             foreach (var entry in ChangeTracker.Entries())
             {
-                bool isSoftDelete = false;
-                entry.CurrentValues.TryGetValue("IsSoftDelete", out isSoftDelete);
+                DateTime? Date;
+                bool isSoftDelete = entry.CurrentValues.TryGetValue("Deleted_at", out Date);
                 if(isSoftDelete)
                 {
                     switch (entry.State)

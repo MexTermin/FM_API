@@ -11,6 +11,5 @@ namespace FMAPI.Helpers
 
         public DateTime? Update_at { get; set; }
 
-        public virtual bool IsSoftDelete { get; } = true;
     }
 }

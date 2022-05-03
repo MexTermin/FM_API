@@ -66,12 +66,12 @@ namespace FM_API.Persistance.Repositories
 
         public async Task<T> Get(Expression<Func<T, bool>> predicate)
         {
-            return await _dbSet.IgnoreQueryFilters().SingleOrDefaultAsync(predicate);
+            return await _dbSet.SingleOrDefaultAsync(predicate);
         }       
         
         public async Task<T> GetWithDelete(Expression<Func<T, bool>> predicate)
         {
-            return await _dbSet.SingleOrDefaultAsync(predicate);
+            return await _dbSet.IgnoreQueryFilters().SingleOrDefaultAsync(predicate);
         }
 
         public async Task<int> Count(Expression<Func<T, bool>> predicate = null)
