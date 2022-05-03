@@ -71,7 +71,7 @@ namespace FM_API.Persistance.Repositories
         
         public async Task<T> GetWithDelete(Expression<Func<T, bool>> predicate)
         {
-            return await _dbSet.IgnoreQueryFilters().SingleOrDefaultAsync(predicate);
+            return await _dbSet.IgnoreQueryFilters().AsNoTracking().SingleOrDefaultAsync(predicate);
         }
 
         public async Task<int> Count(Expression<Func<T, bool>> predicate = null)
