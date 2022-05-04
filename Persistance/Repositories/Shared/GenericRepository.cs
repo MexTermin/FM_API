@@ -64,6 +64,11 @@ namespace FM_API.Persistance.Repositories
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
+        public async Task<IEnumerable<T>> GetManyWithDelete(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.IgnoreQueryFilters().Where(predicate).ToListAsync();
+        }
+
         public async Task<T> Get(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.SingleOrDefaultAsync(predicate);

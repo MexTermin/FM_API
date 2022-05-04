@@ -18,6 +18,7 @@ namespace FM_API.Persistance.Database
         public virtual DbSet<Transaction> Transacciones { get; set; }
         public virtual DbSet<User> Usuario { get; set; }
         public virtual DbSet<Category> Categoria { get; set; }
+        public virtual DbSet<BudgetYears> BudgetYears { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,21 +26,19 @@ namespace FM_API.Persistance.Database
             modelBuilder.HasDefaultSchema("public");
             base.OnModelCreating(modelBuilder);
 
-            // Code for Soft Delete
-            modelBuilder.Entity<Category>().HasQueryFilter(ent => EF.Property<DateTime?>(ent, "Deleted_at") == null);
-
             modelBuilder.Entity<Estimate>().ToTable("estimaciones");
             modelBuilder.Entity<Spent>().ToTable("gastos");
             modelBuilder.Entity<Income>().ToTable("ingresos");
-            modelBuilder.Entity<Budget>().ToTable("presupuesto");
+            modelBuilder.Entity<Budget>().HasQueryFilter(ent => EF.Property<DateTime?>(ent, "Deleted_at") == null).ToTable("presupuesto");
             modelBuilder.Entity<Rol>().ToTable("rol");
             modelBuilder.Entity<Transaction>().ToTable("transacciones");
             modelBuilder.Entity<User>().ToTable("usuario");
-            modelBuilder.Entity<Category>().ToTable("categoria");
+            modelBuilder.Entity<Category>().HasQueryFilter(ent => EF.Property<DateTime?>(ent, "Deleted_at") == null).ToTable("categoria");
+            modelBuilder.Entity<BudgetYears>().HasQueryFilter(ent => EF.Property<DateTime?>(ent, "Deleted_at") == null).ToTable("años_presupuesto");
         }
         public override int SaveChanges()
         {
-            
+
             UpdateSoftDeleteStatuses();
             return base.SaveChanges();
         }
@@ -56,7 +55,7 @@ namespace FM_API.Persistance.Database
             {
                 DateTime? Date;
                 bool isSoftDelete = entry.CurrentValues.TryGetValue("Deleted_at", out Date);
-                if(isSoftDelete)
+                if (isSoftDelete)
                 {
                     switch (entry.State)
                     {

@@ -3,6 +3,7 @@ using System;
 using FM_API.Persistance.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FM_API.Migrations
 {
     [DbContext(typeof(FMContext))]
-    partial class FMContextModelSnapshot : ModelSnapshot
+    [Migration("20220504022645_TenthMigration")]
+    partial class TenthMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,18 +39,16 @@ namespace FM_API.Migrations
                     b.Property<DateTime?>("Deleted_at")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("Id_budgetYear")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("Month")
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("Update_at")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Year")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("Id_budgetYear");
+                    b.HasKey("Id");
 
                     b.ToTable("presupuesto", "public");
                 });
@@ -211,31 +211,6 @@ namespace FM_API.Migrations
                     b.ToTable("usuario", "public");
                 });
 
-            modelBuilder.Entity("FMAPI.Entities.BudgetYears", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("Create_at")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("Deleted_at")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("Update_at")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("años_presupuesto", "public");
-                });
-
             modelBuilder.Entity("FMAPI.Entities.Category", b =>
                 {
                     b.Property<long>("Id")
@@ -263,17 +238,6 @@ namespace FM_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("categoria", "public");
-                });
-
-            modelBuilder.Entity("FM_API.Entities.Budget", b =>
-                {
-                    b.HasOne("FMAPI.Entities.BudgetYears", "BudgetYears")
-                        .WithMany("Budgets")
-                        .HasForeignKey("Id_budgetYear")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BudgetYears");
                 });
 
             modelBuilder.Entity("FM_API.Entities.Estimate", b =>
@@ -366,11 +330,6 @@ namespace FM_API.Migrations
                     b.Navigation("Expenses");
 
                     b.Navigation("Income");
-                });
-
-            modelBuilder.Entity("FMAPI.Entities.BudgetYears", b =>
-                {
-                    b.Navigation("Budgets");
                 });
 #pragma warning restore 612, 618
         }

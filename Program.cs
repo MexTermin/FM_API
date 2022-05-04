@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-var url =  $"http://0.0.0.0:{port}";
+var url = $"http://0.0.0.0:{port}";
 string dbconnection = Environment.GetEnvironmentVariable("FMDATABASE");
 
 // Add services to the container.
@@ -47,7 +47,7 @@ builder.Services.AddControllers().AddJsonOptions(option =>
 {
     option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
- 
+
 builder.Services.AddDbContext<DbContext, FMContext>(options => options.UseNpgsql(dbconnection));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -56,6 +56,7 @@ builder.Services.AddTransient<EstimateRepository>();
 builder.Services.AddTransient<SpentRepository>();
 builder.Services.AddTransient<IncomeRepository>();
 builder.Services.AddTransient<BudgetRepository>();
+builder.Services.AddTransient<BudgetYearsRepository>();
 builder.Services.AddTransient<RolRepository>();
 builder.Services.AddTransient<TransactionRepository>();
 builder.Services.AddTransient<UserRepository>();
@@ -81,4 +82,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run(url);
+app.Run();

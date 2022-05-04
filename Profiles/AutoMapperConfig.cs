@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FM_API.DTOS;
 using FMAPI.DTOS;
-using FMAPI.Entities;
 
 namespace FM_API.Profiles
 {
@@ -15,6 +14,7 @@ namespace FM_API.Profiles
             CreateMap<Spent, SpentDTO>().ReverseMap();
             CreateMap<Income, IncomeDTO>().ReverseMap();
             CreateMap<Budget, BudgetDTO>().ReverseMap();
+            CreateMap<BudgetYears, BudgetYearsDTO>().ReverseMap();
             CreateMap<Rol, RolDTO>().ReverseMap();
             CreateMap<Transaction, TransactionDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
