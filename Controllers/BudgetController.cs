@@ -29,9 +29,26 @@ namespace FM_API.Controllers
             try
             {
                 if (entity.Month > 12 || entity.Month <= 0) return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.IncorrectMonth, error: true));
-                var result = await _repository.Create(_mapper.Map<Budget>(entity));
-                ResponseHelper<BudgetDTO> response = new(MessageHelper.SuccessMessage.MaCreate, _mapper.Map<BudgetDTO>(result));
-                return Ok(response);
+
+                var previusBudget = await ExistingBudget(entity);
+                if (previusBudget == null)
+                {
+                    var result = await _repository.Create(_mapper.Map<Budget>(entity));
+                    ResponseHelper<BudgetDTO> response = new(MessageHelper.SuccessMessage.FeCreate, _mapper.Map<BudgetDTO>(result));
+                    return Ok(response);
+                }
+                else if (previusBudget.Deleted_at == null)
+                {
+                    return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.NameAlreadyExits, error: true));
+                }
+                else
+                {
+                    previusBudget.Deleted_at = null;
+                    previusBudget.Id_budgetYear = entity.Id_budgetYear;
+                    await _repository.Update(previusBudget);
+                    ResponseHelper<BudgetDTO> response = new(MessageHelper.SuccessMessage.MaCreate, _mapper.Map<BudgetDTO>(previusBudget));
+                    return Ok(response);
+                }
             }
             catch
             {
@@ -51,7 +68,6 @@ namespace FM_API.Controllers
             }
             catch
             {
-                throw;
                 ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
                 return BadRequest(response);
             }
@@ -104,7 +120,14 @@ namespace FM_API.Controllers
                 ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
                 return BadRequest(response);
             }
-        }        
-        
+        }
+
+        protected async Task<Budget?> ExistingBudget(BudgetDTO entity)
+        {
+            Budget result = await _repository.GetWithDelete(item => item.Month == entity.Month);
+            ResponseHelper<BudgetDTO> response = new("", _mapper.Map<BudgetDTO>(result));
+            return result;
+        }
+
     }
 }

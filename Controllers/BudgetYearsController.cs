@@ -99,6 +99,8 @@ namespace FMAPI.Controllers
         {
             try
             {
+                BudgetYears budget = await _repository.Get(item => item.Year == entity.Year);
+                if (budget != null) return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.YearAlreadyExits, error: true));
                 await _repository.Update(_mapper.Map<BudgetYears>(entity));
                 ResponseHelper response = new(MessageHelper.SuccessMessage.MaUpdated);
                 return Ok(response);
