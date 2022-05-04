@@ -24,7 +24,7 @@
             public static string IncorrectMonth { get; set; } = "Número de mes incorrecto";
             public static string IncorrectYear { get; set; } = "El año seleccionado no puede ser menor al actuar";
             public static string YearAlreadyExits { get; set; } = "Este año ya se encuentra en uso";
-            public static string combinationAlreadyExits { get; set; } = "Ya se encuentra una entidan con este Mes/Año en uso";
+            public static string combinationAlreadyExits { get; set; } = "Ya se encuentra una entidad con este mes/año en uso";
         }
     }
 }

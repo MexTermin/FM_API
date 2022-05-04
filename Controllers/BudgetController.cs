@@ -27,6 +27,7 @@ namespace FM_API.Controllers
             try
             {
                 if (entity.Month > 12 || entity.Month <= 0) return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.IncorrectMonth, error: true));
+                if (entity.Year < DateTime.UtcNow.Year) return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.IncorrectYear, error: true));
 
                 var previusDateCombination = await ValidDateCombination(entity);
                 if (previusDateCombination != null) return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.combinationAlreadyExits, error: true));
@@ -111,6 +112,9 @@ namespace FM_API.Controllers
         {
             try
             {
+                var previusDateCombination = await ValidDateCombination(entity);
+                if (previusDateCombination != null) return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.combinationAlreadyExits, error: true));
+
                 await _repository.Update(_mapper.Map<Budget>(entity));
                 ResponseHelper response = new(MessageHelper.SuccessMessage.MaUpdated);
                 return Ok(response);
@@ -131,7 +135,7 @@ namespace FM_API.Controllers
 
         protected async Task<Budget?> ValidDateCombination(BudgetDTO entity)
         {
-            Budget result = await _repository.Get(item => item.Month == entity.Month && item.Year == entity.Year);
+            Budget result = await _repository.Get(item => item.Month == entity.Month && item.Year == entity.Year && item.Id != entity.Id);
             ResponseHelper<BudgetDTO> response = new("", _mapper.Map<BudgetDTO>(result));
             return result;
         }
