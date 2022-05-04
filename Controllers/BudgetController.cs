@@ -14,13 +14,11 @@ namespace FM_API.Controllers
     {
         protected BudgetRepository _repository;
         protected IMapper _mapper;
-        protected BudgetYearsRepository _budgetYearsRepository;
 
-        public BudgetController(BudgetRepository repository, IMapper mapper, BudgetYearsRepository budgetYearsRepository)
+        public BudgetController(BudgetRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
-            _budgetYearsRepository = budgetYearsRepository;
         }
 
         [HttpPost]
@@ -29,6 +27,9 @@ namespace FM_API.Controllers
             try
             {
                 if (entity.Month > 12 || entity.Month <= 0) return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.IncorrectMonth, error: true));
+
+                var previusDateCombination = await ValidDateCombination(entity);
+                if (previusDateCombination != null) return BadRequest(new ResponseHelper(MessageHelper.ErrorMessage.combinationAlreadyExits, error: true));
 
                 var previusBudget = await ExistingBudget(entity);
                 if (previusBudget == null)
@@ -44,7 +45,6 @@ namespace FM_API.Controllers
                 else
                 {
                     previusBudget.Deleted_at = null;
-                    previusBudget.Id_budgetYear = entity.Id_budgetYear;
                     await _repository.Update(previusBudget);
                     ResponseHelper<BudgetDTO> response = new(MessageHelper.SuccessMessage.MaCreate, _mapper.Map<BudgetDTO>(previusBudget));
                     return Ok(response);
@@ -125,6 +125,13 @@ namespace FM_API.Controllers
         protected async Task<Budget?> ExistingBudget(BudgetDTO entity)
         {
             Budget result = await _repository.GetWithDelete(item => item.Month == entity.Month);
+            ResponseHelper<BudgetDTO> response = new("", _mapper.Map<BudgetDTO>(result));
+            return result;
+        }
+
+        protected async Task<Budget?> ValidDateCombination(BudgetDTO entity)
+        {
+            Budget result = await _repository.Get(item => item.Month == entity.Month && item.Year == entity.Year);
             ResponseHelper<BudgetDTO> response = new("", _mapper.Map<BudgetDTO>(result));
             return result;
         }

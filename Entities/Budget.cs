@@ -11,10 +11,7 @@ namespace FM_API.Entities
 
         public int Month { get; set; }
 
-        public long Id_budgetYear { get; set; }
-
-        [ForeignKey("Id_budgetYear")]
-        public virtual BudgetYears BudgetYears { get; set; }
+        public long Year { get; set; }
 
         public virtual ICollection<Transaction> Transactions { get; set; }
 

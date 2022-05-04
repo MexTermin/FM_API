@@ -8,7 +8,7 @@ namespace FM_API.DTOS
 
         public int Month { get; set; }
 
-        public long Id_budgetYear { get; set; }
+        public long Year { get; set; }
 
         public ICollection<TransactionDTO> Transactions { get; set; }
 

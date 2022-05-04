@@ -18,7 +18,6 @@ namespace FM_API.Persistance.Database
         public virtual DbSet<Transaction> Transacciones { get; set; }
         public virtual DbSet<User> Usuario { get; set; }
         public virtual DbSet<Category> Categoria { get; set; }
-        public virtual DbSet<BudgetYears> BudgetYears { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,7 +33,6 @@ namespace FM_API.Persistance.Database
             modelBuilder.Entity<Transaction>().ToTable("transacciones");
             modelBuilder.Entity<User>().ToTable("usuario");
             modelBuilder.Entity<Category>().HasQueryFilter(ent => EF.Property<DateTime?>(ent, "Deleted_at") == null).ToTable("categoria");
-            modelBuilder.Entity<BudgetYears>().HasQueryFilter(ent => EF.Property<DateTime?>(ent, "Deleted_at") == null).ToTable("años_presupuesto");
         }
         public override int SaveChanges()
         {

@@ -56,7 +56,6 @@ builder.Services.AddTransient<EstimateRepository>();
 builder.Services.AddTransient<SpentRepository>();
 builder.Services.AddTransient<IncomeRepository>();
 builder.Services.AddTransient<BudgetRepository>();
-builder.Services.AddTransient<BudgetYearsRepository>();
 builder.Services.AddTransient<RolRepository>();
 builder.Services.AddTransient<TransactionRepository>();
 builder.Services.AddTransient<UserRepository>();
