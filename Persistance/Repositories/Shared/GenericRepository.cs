@@ -56,7 +56,8 @@ namespace FM_API.Persistance.Repositories
 
         public async Task<IEnumerable<T>> GetAll()
         {
-            return await _dbSet.ToListAsync();
+            var result = await _dbSet.ToListAsync();
+            return result;
         }
 
         public async Task<IEnumerable<T>> GetMany(Expression<Func<T, bool>> predicate)

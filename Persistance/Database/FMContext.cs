@@ -9,8 +9,12 @@ namespace FM_API.Persistance.Database
     public class FMContext : DbContext
     {
         public FMContext(DbContextOptions<FMContext> options) : base(options) { }
+
         #region dbSets
         public virtual DbSet<Estimate> Estimaciones { get; set; }
+        public virtual DbSet<Estimate_Income> Estimate_Income { get; set; }
+        public virtual DbSet<Estimate_Spent> Estimate_Spent { get; set; }
+
         public virtual DbSet<Spent> Gastos { get; set; }
         public virtual DbSet<Income> Ingresos { get; set; }
         public virtual DbSet<Budget> Presupuesto { get; set; }
@@ -26,6 +30,9 @@ namespace FM_API.Persistance.Database
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Estimate>().ToTable("estimaciones");
+            modelBuilder.Entity<Estimate_Income>().ToTable("estimate_income");
+            modelBuilder.Entity<Estimate_Spent>().ToTable("estimate_spent");
+
             modelBuilder.Entity<Spent>().ToTable("gastos");
             modelBuilder.Entity<Income>().ToTable("ingresos");
             modelBuilder.Entity<Budget>().HasQueryFilter(ent => EF.Property<DateTime?>(ent, "Deleted_at") == null).ToTable("presupuesto");

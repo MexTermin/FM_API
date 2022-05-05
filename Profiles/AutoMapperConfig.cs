@@ -11,6 +11,9 @@ namespace FM_API.Profiles
             AllowNullCollections = true;
 
             CreateMap<Estimate, EstimateDTO>().ReverseMap();
+            CreateMap<Estimate_Spent, Estimate_SpentDTO>().ReverseMap();
+            CreateMap<Estimate_Income, Estimate_IncomeDTO>().ReverseMap();
+
             CreateMap<Spent, SpentDTO>().ReverseMap();
             CreateMap<Income, IncomeDTO>().ReverseMap();
             CreateMap<Budget, BudgetDTO>().ReverseMap();

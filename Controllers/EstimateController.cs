@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using FM_API.DTOS;
-using FM_API.Persistance.Repositories;
 using FM_API.Persistance.Repositories.Shared;
+using FMAPI.DTOS;
 using FMAPI.Helpers;
+using FMAPI.Persistance.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FM_API.Controllers
@@ -12,12 +13,30 @@ namespace FM_API.Controllers
     public class EstimateController : ControllerBase, IGenericCRUD<EstimateDTO>
     {
         protected EstimateRepository _repository;
+        protected CategoryRepository _categoryRepository;
+        protected Estimate_SpentRepository _ESpentRepository;
+        protected Estimate_IncomeRepository _EIncomeRepository;
+        protected IncomeRepository _incomeRepository;
+        protected SpentRepository _spentRepository;
         protected IMapper _mapper;
 
-        public EstimateController(EstimateRepository repository, IMapper mapper)
+        public EstimateController(
+            EstimateRepository repository,
+            IMapper mapper,
+            CategoryRepository categoryRepository,
+            SpentRepository spentRepository,
+            Estimate_IncomeRepository EIncomeRepository,
+            Estimate_SpentRepository ESRepository,
+            IncomeRepository incomeRepository
+            )
         {
             _repository = repository;
             _mapper = mapper;
+            _categoryRepository = categoryRepository;
+            _EIncomeRepository = EIncomeRepository;
+            _ESpentRepository = ESRepository;
+            _incomeRepository = incomeRepository;
+            _spentRepository = spentRepository;
         }
 
         [HttpPost]
@@ -42,6 +61,8 @@ namespace FM_API.Controllers
             try
             {
                 await _repository.Delete(idEntity);
+                await _EIncomeRepository.DeleteAll(item => item.Id_Estimate == idEntity);
+                await _ESpentRepository.DeleteAll(item => item.Id_Estimate == idEntity);
                 ResponseHelper response = new(MessageHelper.SuccessMessage.FeDelete);
                 return Ok(response);
             }
@@ -59,11 +80,18 @@ namespace FM_API.Controllers
             try
             {
                 IEnumerable<Estimate> result = await _repository.GetAll();
+                foreach (Estimate item in result)
+                {
+                    item.Category = await _categoryRepository.GetWithDelete(e => e.Id == item.Id_category);
+                    item.Income = (await _EIncomeRepository.GetManyWithDelete(e => e.Id_Estimate == item.Id)).ToList();
+                    item.Expenses = (await _ESpentRepository.GetManyWithDelete(e => e.Id_Estimate == item.Id)).ToList();
+                }
                 ResponseHelper<IEnumerable<EstimateDTO>> response = new("", _mapper.Map<IEnumerable<EstimateDTO>>(result.ToList()));
                 return Ok(response);
             }
             catch
             {
+                throw;
                 ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
                 return BadRequest(response);
             }
@@ -75,6 +103,9 @@ namespace FM_API.Controllers
             try
             {
                 Estimate result = await _repository.Get(item => item.Id == id);
+                result.Category = await _categoryRepository.GetWithDelete(e => e.Id == result.Id_category);
+                result.Income = (await _EIncomeRepository.GetManyWithDelete(e => e.Id_Estimate == result.Id)).ToList();
+                result.Expenses = (await _ESpentRepository.GetManyWithDelete(e => e.Id_Estimate == result.Id)).ToList();
                 ResponseHelper<EstimateDTO> response = new("", _mapper.Map<EstimateDTO>(result));
                 return Ok(response);
             }
@@ -92,6 +123,81 @@ namespace FM_API.Controllers
             {
                 await _repository.Update(_mapper.Map<Estimate>(entity));
                 ResponseHelper response = new(MessageHelper.SuccessMessage.FeUpdated);
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPost("spent")]
+        public async Task<IActionResult> AddSpent(Estimate_SpentDTO entity)
+        {
+            try
+            {
+                await _ESpentRepository.Create(_mapper.Map<Estimate_Spent>(entity));
+                ResponseHelper response = new(MessageHelper.SuccessMessage.MaCreate);
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPost("income")]
+        public async Task<IActionResult> AddIncome(Estimate_IncomeDTO entity)
+        {
+            try
+            {
+                await _EIncomeRepository.Create(_mapper.Map<Estimate_Income>(entity));
+                ResponseHelper response = new(MessageHelper.SuccessMessage.MaCreate);
+                return Ok(response);
+            }
+            catch
+            {
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
+        }
+
+        [HttpGet("income/{id:long}")]
+        public async Task<IActionResult> GetAllIncome(long id)
+        {
+            try
+            {
+                var result = await _EIncomeRepository.GetManyWithDelete(e => e.Id_Estimate == id);
+                foreach (var resultItem in result)
+                {
+                    resultItem.Income = await _incomeRepository.GetWithDelete(item => item.Id == resultItem.Id_Income);
+                }
+
+                ResponseHelper<IEnumerable<Estimate_IncomeDTO>> response = new("", _mapper.Map<IEnumerable<Estimate_IncomeDTO>>(result.ToList()));
+                return Ok(response);
+            }
+            catch
+            {
+                throw;
+                ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
+                return BadRequest(response);
+            }
+        }
+
+        [HttpGet("spent/{id:long}")]
+        public async Task<IActionResult> GetAllSpent(long id)
+        {
+            try
+            {
+                var result = await _ESpentRepository.GetManyWithDelete(e => e.Id_Estimate == id);
+                foreach (var resultItem in result)
+                {
+                    resultItem.Spent = await _spentRepository.GetWithDelete(item => item.Id == resultItem.Id_Spent);
+                }
+
+                ResponseHelper<IEnumerable<Estimate_SpentDTO>> response = new("", _mapper.Map<IEnumerable<Estimate_SpentDTO>>(result.ToList()));
                 return Ok(response);
             }
             catch

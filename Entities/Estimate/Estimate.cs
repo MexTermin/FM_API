@@ -14,22 +14,16 @@ namespace FM_API.Entities
 
         public long Id_budget { get; set; }
 
-        public long Id_spent { get; set; }
-
-        public long Id_income { get; set; }
-
         public long Id_category { get; set; }
 
         [ForeignKey("Id_category")]
-        public virtual Category Category { get; set; }        
-        
+        public virtual Category Category { get; set; }
+
         [ForeignKey("Id_budget")]
         public virtual Budget Budget { get; set; }
 
-        [ForeignKey("Id_spent")]
-        public virtual ICollection<Spent> Expenses { get; set; }
+        public virtual ICollection<Estimate_Spent> Expenses { get; set; }
 
-        [ForeignKey("Id_income")]
-        public virtual ICollection<Income> Income { get; set; }
+        public virtual ICollection<Estimate_Income> Income { get; set; }
     }
 }
