@@ -2,7 +2,7 @@
 
 namespace FMAPI.DTOS
 {
-    public class Estimate_SpentDTO
+    public class EstimateSpentDTO
     {
         public long Id { get; set; }
 

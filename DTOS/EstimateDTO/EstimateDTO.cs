@@ -18,8 +18,8 @@ namespace FM_API.DTOS
 
         public BudgetDTO Budget { get; set; }
 
-        public ICollection<Estimate_SpentDTO> Expenses { get; set; }
+        public ICollection<EstimateSpentDTO> Expenses { get; set; }
 
-        public ICollection<Estimate_IncomeDTO> Income { get; set; }
+        public ICollection<EstimateIncomeDTO> Income { get; set; }
     }
 }

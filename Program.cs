@@ -53,8 +53,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 #region Region Repository
 builder.Services.AddTransient<EstimateRepository>();
-builder.Services.AddTransient<Estimate_IncomeRepository>();
-builder.Services.AddTransient<Estimate_SpentRepository>();
+builder.Services.AddTransient<EstimateIncomeRepository>();
+builder.Services.AddTransient<EstimateSpentRepository>();
 
 builder.Services.AddTransient<SpentRepository>();
 builder.Services.AddTransient<IncomeRepository>();

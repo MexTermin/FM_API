@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FMAPI.Entities
 {
-    public class Estimate_Spent
+    public class EstimateSpent
     {
         [Key]
         public long Id { get; set; }

@@ -14,8 +14,8 @@ namespace FM_API.Controllers
     {
         protected EstimateRepository _repository;
         protected CategoryRepository _categoryRepository;
-        protected Estimate_SpentRepository _ESpentRepository;
-        protected Estimate_IncomeRepository _EIncomeRepository;
+        protected EstimateSpentRepository _ESpentRepository;
+        protected EstimateIncomeRepository _EIncomeRepository;
         protected IncomeRepository _incomeRepository;
         protected SpentRepository _spentRepository;
         protected IMapper _mapper;
@@ -25,8 +25,8 @@ namespace FM_API.Controllers
             IMapper mapper,
             CategoryRepository categoryRepository,
             SpentRepository spentRepository,
-            Estimate_IncomeRepository EIncomeRepository,
-            Estimate_SpentRepository ESRepository,
+            EstimateIncomeRepository EIncomeRepository,
+            EstimateSpentRepository ESRepository,
             IncomeRepository incomeRepository
             )
         {
@@ -133,11 +133,11 @@ namespace FM_API.Controllers
         }
 
         [HttpPost("spent")]
-        public async Task<IActionResult> AddSpent(Estimate_SpentDTO entity)
+        public async Task<IActionResult> AddSpent(EstimateSpentDTO entity)
         {
             try
             {
-                await _ESpentRepository.Create(_mapper.Map<Estimate_Spent>(entity));
+                await _ESpentRepository.Create(_mapper.Map<EstimateSpent>(entity));
                 ResponseHelper response = new(MessageHelper.SuccessMessage.MaCreate);
                 return Ok(response);
             }
@@ -149,11 +149,11 @@ namespace FM_API.Controllers
         }
 
         [HttpPost("income")]
-        public async Task<IActionResult> AddIncome(Estimate_IncomeDTO entity)
+        public async Task<IActionResult> AddIncome(EstimateIncomeDTO entity)
         {
             try
             {
-                await _EIncomeRepository.Create(_mapper.Map<Estimate_Income>(entity));
+                await _EIncomeRepository.Create(_mapper.Map<EstimateIncome>(entity));
                 ResponseHelper response = new(MessageHelper.SuccessMessage.MaCreate);
                 return Ok(response);
             }
@@ -175,7 +175,7 @@ namespace FM_API.Controllers
                     resultItem.Income = await _incomeRepository.GetWithDelete(item => item.Id == resultItem.Id_Income);
                 }
 
-                ResponseHelper<IEnumerable<Estimate_IncomeDTO>> response = new("", _mapper.Map<IEnumerable<Estimate_IncomeDTO>>(result.ToList()));
+                ResponseHelper<IEnumerable<EstimateIncomeDTO>> response = new("", _mapper.Map<IEnumerable<EstimateIncomeDTO>>(result.ToList()));
                 return Ok(response);
             }
             catch
@@ -197,7 +197,7 @@ namespace FM_API.Controllers
                     resultItem.Spent = await _spentRepository.GetWithDelete(item => item.Id == resultItem.Id_Spent);
                 }
 
-                ResponseHelper<IEnumerable<Estimate_SpentDTO>> response = new("", _mapper.Map<IEnumerable<Estimate_SpentDTO>>(result.ToList()));
+                ResponseHelper<IEnumerable<EstimateSpentDTO>> response = new("", _mapper.Map<IEnumerable<EstimateSpentDTO>>(result.ToList()));
                 return Ok(response);
             }
             catch

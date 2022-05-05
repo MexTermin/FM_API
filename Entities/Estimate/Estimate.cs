@@ -22,8 +22,8 @@ namespace FM_API.Entities
         [ForeignKey("Id_budget")]
         public virtual Budget Budget { get; set; }
 
-        public virtual ICollection<Estimate_Spent> Expenses { get; set; }
+        public virtual ICollection<EstimateSpent> Expenses { get; set; }
 
-        public virtual ICollection<Estimate_Income> Income { get; set; }
+        public virtual ICollection<EstimateIncome> Income { get; set; }
     }
 }

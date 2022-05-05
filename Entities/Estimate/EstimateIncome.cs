@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FMAPI.Entities
 {
-    public class Estimate_Income
+    public class EstimateIncome
     {
         [Key]
         public long Id { get; set; }
