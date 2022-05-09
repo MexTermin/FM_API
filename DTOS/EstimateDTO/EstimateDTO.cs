@@ -22,4 +22,17 @@ namespace FM_API.DTOS
 
         public ICollection<EstimateIncomeDTO> Income { get; set; }
     }
+
+    public class EstimateRequestDTO
+    {
+        public long Id_category { get; set; }
+
+        public int Plan { get; set; }
+
+        public long Id_budget { get; set; }
+
+        public SpentDTO Spent { get; set; }
+
+        public IncomeDTO SingleIncome { get; set; }
+    }
 }
