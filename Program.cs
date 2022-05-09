@@ -60,7 +60,11 @@ builder.Services.AddTransient<SpentRepository>();
 builder.Services.AddTransient<IncomeRepository>();
 builder.Services.AddTransient<BudgetRepository>();
 builder.Services.AddTransient<RolRepository>();
+
 builder.Services.AddTransient<TransactionRepository>();
+builder.Services.AddTransient<TransactionIncomeRepository>();
+builder.Services.AddTransient<TransactionSpentRepository>();
+
 builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<CategoryRepository>();
 #endregion

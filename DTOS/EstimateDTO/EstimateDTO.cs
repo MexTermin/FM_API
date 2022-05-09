@@ -14,7 +14,7 @@ namespace FM_API.DTOS
 
         public long Id_budget { get; set; }
 
-        public virtual Category Category { get; set; }
+        public CategoryDTO Category { get; set; }
 
         public BudgetDTO Budget { get; set; }
 
