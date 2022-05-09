@@ -16,10 +16,6 @@ namespace FM_API.Entities
 
         public long Id_budget { get; set; }
 
-        public long Id_spent { get; set; }
-
-        public long Id_income { get; set; }
-
         public long Id_category { get; set; }
 
         [ForeignKey("Id_category")]
@@ -28,10 +24,8 @@ namespace FM_API.Entities
         [ForeignKey("Id_budget")]
         public virtual Budget Budget { get; set; }
 
-        [ForeignKey("Id_spent")]
-        public virtual ICollection<Spent> Expenses { get; set; }
+        public virtual ICollection<TransactionSpent> Expenses { get; set; }
 
-        [ForeignKey("Id_income")]
-        public virtual ICollection<Income> Income { get; set; }
+        public virtual ICollection<TransactionIncome> Income { get; set; }
     }
 }

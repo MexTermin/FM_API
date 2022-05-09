@@ -1,5 +1,7 @@
 ﻿#nullable disable
 
+using FMAPI.DTOS;
+
 namespace FM_API.DTOS
 {
     public class TransactionDTO
@@ -20,8 +22,8 @@ namespace FM_API.DTOS
 
         public BudgetDTO Budget { get; set; }
 
-        public ICollection<SpentDTO> Expenses { get; set; }
+        public ICollection<TransactionSpentDTO> Expenses { get; set; }
 
-        public ICollection<IncomeDTO> Income { get; set; }
+        public ICollection<TransactionIncomeDTO> Income { get; set; }
     }
 }
