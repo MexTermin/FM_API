@@ -50,23 +50,28 @@ namespace FM_API.Controllers
 
 
                 // Create spent and relations
-                var newSpent = await _spentRepository.Create(_mapper.Map<Spent>(entity.Spent));
-                var newEstimateSpent = await _ESpentRepository.Create(new EstimateSpent { Id_Estimate = result.Id, Id_Spent = newSpent.Id });
-                newEstimateSpent.Spent = newSpent;
-                result.Expenses = new List<EstimateSpent>() { newEstimateSpent };
+                if (entity.Spent != null)
+                {
+                    var newSpent = await _spentRepository.Create(_mapper.Map<Spent>(entity.Spent));
+                    var newEstimateSpent = await _ESpentRepository.Create(new EstimateSpent { Id_Estimate = result.Id, Id_Spent = newSpent.Id });
+                    newEstimateSpent.Spent = newSpent;
+                    result.Expenses = new List<EstimateSpent>() { newEstimateSpent };
+                }
 
                 // Create income and relations
-                var newIncome = await _incomeRepository.Create(_mapper.Map<Income>(entity.SingleIncome));
-                var newEstimateSIncome = await _EIncomeRepository.Create(new EstimateIncome { Id_Estimate = result.Id, Id_Income = newIncome.Id });
-                newEstimateSIncome.Income = newIncome;
-                result.Income = new List<EstimateIncome>() { newEstimateSIncome };
+                if (entity.SingleIncome != null)
+                {
+                    var newIncome = await _incomeRepository.Create(_mapper.Map<Income>(entity.SingleIncome));
+                    var newEstimateSIncome = await _EIncomeRepository.Create(new EstimateIncome { Id_Estimate = result.Id, Id_Income = newIncome.Id });
+                    newEstimateSIncome.Income = newIncome;
+                    result.Income = new List<EstimateIncome>() { newEstimateSIncome };
+                }
 
                 ResponseHelper<EstimateDTO> response = new(MessageHelper.SuccessMessage.FeCreate, _mapper.Map<EstimateDTO>(result));
                 return Ok(response);
             }
             catch
             {
-                throw;
                 ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
                 return BadRequest(response);
             }
@@ -119,7 +124,7 @@ namespace FM_API.Controllers
             try
             {
                 Estimate result = await _repository.GetWithDelete(item => item.Id == id);
-                if(result != null)
+                if (result != null)
                 {
                     result.Category = await _categoryRepository.GetWithDelete(e => e.Id == result.Id_category);
                     result.Income = await GetEstimateIncomes(result.Id);

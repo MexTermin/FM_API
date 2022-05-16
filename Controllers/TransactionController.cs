@@ -50,19 +50,25 @@ namespace FM_API.Controllers
                 result.Income = new List<TransactionIncome>();
 
                 // Create spent and relations
-                foreach (SpentDTO spent in entity.Expenses)
+                if (entity.Expenses != null)
                 {
-                    var newSpent = await _spentRepository.Create(_mapper.Map<Spent>(spent));
-                    var newTransactionSpent = await _TSpentRepository.Create(new TransactionSpent { Id_Transaction = result.Id, Id_Spent = newSpent.Id });
-                    newTransactionSpent.Spent = newSpent;
+                    foreach (SpentDTO spent in entity.Expenses)
+                    {
+                        var newSpent = await _spentRepository.Create(_mapper.Map<Spent>(spent));
+                        var newTransactionSpent = await _TSpentRepository.Create(new TransactionSpent { Id_Transaction = result.Id, Id_Spent = newSpent.Id });
+                        newTransactionSpent.Spent = newSpent;
+                    }
                 }
 
                 // Create income and relations
-                foreach (IncomeDTO income in entity.Income)
+                if (entity.Income != null)
                 {
-                    var newIncome = await _incomeRepository.Create(_mapper.Map<Income>(income));
-                    var newTransactionIncome = await _TIncomeRepository.Create(new TransactionIncome { Id_Transaction = result.Id, Id_Income = newIncome.Id });
-                    newTransactionIncome.Income = newIncome;
+                    foreach (IncomeDTO income in entity.Income)
+                    {
+                        var newIncome = await _incomeRepository.Create(_mapper.Map<Income>(income));
+                        var newTransactionIncome = await _TIncomeRepository.Create(new TransactionIncome { Id_Transaction = result.Id, Id_Income = newIncome.Id });
+                        newTransactionIncome.Income = newIncome;
+                    }
                 }
 
                 ResponseHelper<TransactionDTO> response = new(MessageHelper.SuccessMessage.FeCreate, _mapper.Map<TransactionDTO>(result));
