@@ -1,7 +1,6 @@
 ﻿using FMAPI.DTOS;
 #nullable disable
 
-
 namespace FM_API.DTOS
 {
     public class EstimateDTO
@@ -18,9 +17,7 @@ namespace FM_API.DTOS
 
         public BudgetDTO Budget { get; set; }
 
-        public ICollection<EstimateSpentDTO> Expenses { get; set; }
-
-        public ICollection<EstimateIncomeDTO> Income { get; set; }
+        public TypeDTO Type { get; set; }
     }
 
     public class EstimateRequestDTO
@@ -30,9 +27,7 @@ namespace FM_API.DTOS
         public int Plan { get; set; }
 
         public long Id_budget { get; set; }
+        public long Id_Type { get; set; }
 
-        public SpentDTO Spent { get; set; }
-
-        public IncomeDTO SingleIncome { get; set; }
     }
 }

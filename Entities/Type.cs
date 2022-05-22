@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FM_API.Entities
+namespace FMAPI.Entities
 {
-    public class Income
+    public class Type
     {
         [Key]
         public long Id { get; set; }
-    
-        public int Amount { get; set; }  
+
+        [Required]
+        public string Name { get; set; }
     }
 }

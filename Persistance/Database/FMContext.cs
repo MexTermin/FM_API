@@ -3,6 +3,7 @@
 
 using System.Linq;
 using System.Linq.Expressions;
+using Type = FMAPI.Entities.Type;
 
 namespace FM_API.Persistance.Database
 {
@@ -12,16 +13,12 @@ namespace FM_API.Persistance.Database
 
         #region dbSets
         public virtual DbSet<Estimate> Estimaciones { get; set; }
-        public virtual DbSet<EstimateIncome> Estimate_Income { get; set; }
-        public virtual DbSet<EstimateSpent> Estimate_Spent { get; set; }
-
-        public virtual DbSet<Spent> Gastos { get; set; }
-        public virtual DbSet<Income> Ingresos { get; set; }
         public virtual DbSet<Budget> Presupuesto { get; set; }
         public virtual DbSet<Rol> Rol { get; set; }
         public virtual DbSet<Transaction> Transacciones { get; set; }
         public virtual DbSet<User> Usuario { get; set; }
         public virtual DbSet<Category> Categoria { get; set; }
+        public virtual DbSet<Type> Tyype { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,16 +27,13 @@ namespace FM_API.Persistance.Database
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Estimate>().ToTable("estimaciones");
-            modelBuilder.Entity<EstimateIncome>().ToTable("estimate_income");
-            modelBuilder.Entity<EstimateSpent>().ToTable("estimate_spent");
-
-            modelBuilder.Entity<Spent>().ToTable("gastos");
-            modelBuilder.Entity<Income>().ToTable("ingresos");
             modelBuilder.Entity<Budget>().HasQueryFilter(ent => EF.Property<DateTime?>(ent, "Deleted_at") == null).ToTable("presupuesto");
             modelBuilder.Entity<Rol>().ToTable("rol");
             modelBuilder.Entity<Transaction>().ToTable("transacciones");
             modelBuilder.Entity<User>().ToTable("usuario");
+            modelBuilder.Entity<Type>().ToTable("type");
             modelBuilder.Entity<Category>().HasQueryFilter(ent => EF.Property<DateTime?>(ent, "Deleted_at") == null).ToTable("categoria");
+
         }
         public override int SaveChanges()
         {
