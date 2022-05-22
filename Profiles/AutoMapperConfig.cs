@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FM_API.DTOS;
 using FMAPI.DTOS;
+using Type = FMAPI.Entities.Type;
 
 namespace FM_API.Profiles
 {
@@ -21,7 +22,10 @@ namespace FM_API.Profiles
 
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, UsuarioResponseDTO>().ReverseMap();
+
             CreateMap<Category, CategoryDTO>().ReverseMap();
+
+            CreateMap<Type, TypeDTO>().ReverseMap();
         }
     }
 }

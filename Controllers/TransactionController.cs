@@ -12,17 +12,20 @@ namespace FM_API.Controllers
     {
         protected TransactionRepository _repository;
         protected CategoryRepository _categoryRepository;
+        protected TypeRepository _typeRepository;
         protected IMapper _mapper;
 
         public TransactionController(
             TransactionRepository repository,
             IMapper mapper,
-            CategoryRepository categoryRepository
+            CategoryRepository categoryRepository,
+            TypeRepository typeRepository
             )
         {
             _repository = repository;
             _mapper = mapper;
             _categoryRepository = categoryRepository;
+            _typeRepository = typeRepository;
         }
 
         [HttpPost]
@@ -33,6 +36,7 @@ namespace FM_API.Controllers
                 var result = await _repository.Create(_mapper.Map<Transaction>(entity));
                 // Category
                 result.Category = await _categoryRepository.GetWithDelete(item => item.Id == result.Id_category);
+                result.Type = await _typeRepository.GetWithDelete(item => item.Id == result.Id_type);
 
                 ResponseHelper<TransactionDTO> response = new(MessageHelper.SuccessMessage.FeCreate, _mapper.Map<TransactionDTO>(result));
                 return Ok(response);
@@ -70,6 +74,7 @@ namespace FM_API.Controllers
                 foreach (Transaction item in result)
                 {
                     item.Category = await _categoryRepository.GetWithDelete(e => e.Id == item.Id_category);
+                    item.Type = await _typeRepository.GetWithDelete(e => e.Id == item.Id_type);
                 }
                 ResponseHelper<IEnumerable<TransactionDTO>> response = new("", _mapper.Map<IEnumerable<TransactionDTO>>(result.ToList()));
                 return Ok(response);
@@ -90,6 +95,7 @@ namespace FM_API.Controllers
                 if (result != null)
                 {
                     result.Category = await _categoryRepository.GetWithDelete(e => e.Id == result.Id_category);
+                    result.Type = await _typeRepository.GetWithDelete(e => e.Id == result.Id_type);
                 }
                 ResponseHelper<TransactionDTO> response = new("", _mapper.Map<TransactionDTO>(result));
                 return Ok(response);
@@ -126,13 +132,13 @@ namespace FM_API.Controllers
                 foreach (Transaction item in result)
                 {
                     item.Category = await _categoryRepository.GetWithDelete(e => e.Id == item.Id_category);
+                    item.Type = await _typeRepository.GetWithDelete(e => e.Id == item.Id_type);
                 }
                 ResponseHelper<IEnumerable<TransactionDTO>> response = new("", _mapper.Map<IEnumerable<TransactionDTO>>(result.ToList()));
                 return Ok(response);
             }
             catch
             {
-                throw;
                 ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
                 return BadRequest(response);
             }

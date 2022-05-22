@@ -25,8 +25,8 @@ namespace FM_API.Entities
         [ForeignKey("Id_budget")]
         public virtual Budget Budget { get; set; }
 
-        public long Id_Type { get; set; }
-        [ForeignKey("Id_Type")]
+        public long Id_type { get; set; }
+        [ForeignKey("Id_type")]
         public virtual Type Type { get; set; }
 
     }

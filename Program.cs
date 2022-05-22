@@ -53,14 +53,12 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 #region Region Repository
 builder.Services.AddTransient<EstimateRepository>();
-
 builder.Services.AddTransient<BudgetRepository>();
 builder.Services.AddTransient<RolRepository>();
-
 builder.Services.AddTransient<TransactionRepository>();
-
 builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<CategoryRepository>();
+builder.Services.AddTransient<TypeRepository>();
 #endregion
 
 var app = builder.Build();

@@ -1,35 +1,39 @@
 ﻿using AutoMapper;
-using FM_API.DTOS;
 using FM_API.Persistance.Repositories.Shared;
+using FMAPI.DTOS;
 using FMAPI.Helpers;
+using FMAPI.Persistance.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Type = FMAPI.Entities.Type;
 
-namespace FM_API.Controllers
+namespace FMAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class RolController : ControllerBase, IGenericCRUD<RolDTO>
+    public class TypeController : ControllerBase, IGenericCRUD<TypeDTO>
     {
-        protected RolRepository _repository;
+        protected TypeRepository _repository;
         protected IMapper _mapper;
 
-        public RolController(RolRepository repository, IMapper mapper)
+        public TypeController(TypeRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(RolDTO entity)
+        public async Task<IActionResult> Create(TypeDTO entity)
         {
             try
             {
-                Rol result = await _repository.Create(_mapper.Map<Rol>(entity));
-                ResponseHelper<RolDTO> response = new(MessageHelper.SuccessMessage.MaCreate, _mapper.Map<RolDTO>(result));
+                Type result = await _repository.Create(_mapper.Map<Type>(entity));
+                ResponseHelper<TypeDTO> response = new(MessageHelper.SuccessMessage.MaCreate, _mapper.Map<TypeDTO>(result));
                 return Ok(response);
             }
             catch
             {
+
+                throw;
                 ResponseHelper response = new(MessageHelper.ErrorMessage.GenericError, error: true);
                 return BadRequest(response);
             }
@@ -55,8 +59,8 @@ namespace FM_API.Controllers
         {
             try
             {
-                IEnumerable<Rol> result = await _repository.GetAll();
-                ResponseHelper<IEnumerable<RolDTO>> response = new("", _mapper.Map<IEnumerable<RolDTO>>(result.ToList()));
+                IEnumerable<Type> result = await _repository.GetAll();
+                ResponseHelper<IEnumerable<TypeDTO>> response = new("", _mapper.Map<IEnumerable<TypeDTO>>(result.ToList()));
                 return Ok(response);
             }
             catch
@@ -71,8 +75,8 @@ namespace FM_API.Controllers
         {
             try
             {
-                Rol result = await _repository.Get(item => item.Id == id);
-                ResponseHelper<RolDTO> response = new("", _mapper.Map<RolDTO>(result));
+                Type result = await _repository.Get(item => item.Id == id);
+                ResponseHelper<TypeDTO> response = new("", _mapper.Map<TypeDTO>(result));
                 return Ok(response);
             }
             catch
@@ -83,11 +87,11 @@ namespace FM_API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(RolDTO entity)
+        public async Task<IActionResult> Update(TypeDTO entity)
         {
             try
             {
-                await _repository.Update(_mapper.Map<Rol>(entity));
+                await _repository.Update(_mapper.Map<Type>(entity));
                 ResponseHelper response = new(MessageHelper.SuccessMessage.MaUpdated);
                 return Ok(response);
             }
