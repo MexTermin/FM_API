@@ -1,4 +1,6 @@
+using FM_API.Controllers;
 using FM_API.Persistance.Database;
+using FMAPI.Controllers;
 using FMAPI.Persistance.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -6,14 +8,24 @@ using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-var url = $"http://0.0.0.0:{port}";
+string port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+string url = $"http://0.0.0.0:{port}";
 string dbconnection = Environment.GetEnvironmentVariable("FMDATABASE");
 
-// Add services to the container.
+#region Cors
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+        policy.AllowAnyOrigin();
+        policy.SetIsOriginAllowed(origin => true);
+    });
+});
+#endregion
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+#region Project Senttings
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -29,27 +41,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
-
-#region Cors
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyHeader();
-        policy.AllowAnyMethod();
-        policy.AllowAnyOrigin();
-        policy.SetIsOriginAllowed(origin => true);
-    });
-});
-#endregion
-
-builder.Services.AddControllers().AddJsonOptions(option =>
+builder.Services.AddControllersWithViews().AddControllersAsServices().AddJsonOptions(option =>
 {
     option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
-
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddDbContext<DbContext, FMContext>(options => options.UseNpgsql(dbconnection));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+#endregion
+
+// Rotativa Config
+Rotativa.AspNetCore.RotativaConfiguration.Setup(builder.Environment.ContentRootPath, "Rotativa");
 
 #region Region Repository
 builder.Services.AddTransient<EstimateRepository>();
@@ -63,10 +65,6 @@ builder.Services.AddTransient<TypeRepository>();
 
 var app = builder.Build();
 app.UseCors();
-
-
-// Configure the HTTP request pipeline.
-
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using FM_API.DTOS;
 using FM_API.Persistance.Repositories.Shared;
-using FMAPI.DTOS;
 using FMAPI.Helpers;
-using FMAPI.Persistance.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FM_API.Controllers
