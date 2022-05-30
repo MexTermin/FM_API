@@ -1,8 +1,150 @@
 ﻿@model FMAPI.Model.PDFModel
-@{  
-    Layout = null;  
-}  
+@{
+    Layout = null;
+}
 <html>
-    <head></head>
-    <body>dd</body>
+<head>
+    <meta charset="utf-8" />
+    <title>Reporte</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            font-size: 20px;
+        }
+
+        table {
+            width: 100vw;
+            border: solid 1px black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            vertical-align: top;
+            border: 1px solid #000;
+            border-spacing: 0;
+            padding: 6px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .table-center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <table class="table-center">
+        <thead>
+            <tr>
+                <th class="text-center" colspan="8">Presupuesto de @Model.Month</th>
+            </tr>
+            <tr>
+                <th style="width:50%;" colspan="4">Gastos</th>
+                <th style="width:50%;" colspan="4">Ganancias</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="width:15%;" colspan="2">Previsto</td>
+                <td style="width:35%;" colspan="2" class="text-right">@Model.ProvidedExpenses</td>
+                <td style="width:15%;" colspan="2">Previsto</td>
+                <td style="width:35%;" colspan="2" class="text-right">@Model.ProvidedIncome</td>
+            </tr>
+            <tr>
+                <td colspan="2">Real</td>
+                <td colspan="2" class="text-right">
+                    @if (@Model.TrueExpenses < @Model.ProvidedExpenses)
+                    {
+                        <span style="color:red;">@Model.TrueExpenses</span>
+                    }
+                    else
+                    {
+                        @Model.TrueExpenses
+                    }
+                </td>
+                <td colspan="2">Real</td>
+                <td colspan="2" class="text-right">
+                    @if (@Model.TrueIncome < @Model.ProvidedIncome)
+                    {
+                        <span style="color:red;">@Model.TrueIncome</span>
+                    }
+                    else
+                    {
+                        @Model.TrueIncome
+                    }
+                </td>
+            </tr>
+            <tr><td colspan="8"></td></tr>
+            <tr><td class="text-center" colspan="8">Descripción</td></tr>
+            <tr>
+                <td style="width:15%;" colspan="1">Categoría</td>
+                <td style="width:10%;" colspan="1">Plan</td>
+                <td style="width:10%;" colspan="1">Real</td>
+                <td style="width:15%;" colspan="1">Diferencia</td>
+
+                <td style="width:15%;" colspan="1">Categoría</td>
+                <td style="width:10%;" colspan="1">Plan</td>
+                <td style="width:10%;" colspan="1">Real</td>
+                <td style="width:15%;" colspan="1">Diferencia</td>
+            </tr>
+
+            @for (var i = 0; i < Model.LongestList; i++)
+            {
+                <tr>
+                    @if (Model.Expenses.Count() > i)
+                    {
+                        var item = Model.Expenses[i];
+                        <td style="width:15%;" colspan="1">@item.category</td>
+                        <td style="width:10%;" colspan="1" class="text-right">@item.Estimate</td>
+                        <td style="width:10%;" colspan="1" class="text-right">@item.Amount</td>
+                        <td style="width:15%;" colspan="1" class="text-right">
+                            @if (item.Estimate > item.Amount)
+                            {
+                                <span style="color:red;">@item.difference</span>
+                            }
+                            else
+                            {
+                                @item.difference
+                            }
+                        </td>
+                    }
+                    else
+                    {
+                        <td style="width:50%;" colspan="4" class="text-right"></td>
+                    }
+                    @if (Model.Income.Count() > i)
+                    {
+                        var item = Model.Income[i];
+                        <td style="width:15%;" colspan="1">@item.category</td>
+                        <td style="width:10%;" colspan="1" class="text-right">@item.Estimate</td>
+                        <td style="width:10%;" colspan="1" class="text-right">@item.Amount</td>
+                        <td style="width:15%;" colspan="1" class="text-right">
+                            @if (item.Estimate > item.Amount)
+                            {
+                                <span style="color:red;">@item.difference</span>
+                            }
+                            else
+                            {
+                                @item.difference
+                            }
+                        </td>
+                    }
+                    else
+                    {
+                        <td style="width:50%;" colspan="4" class="text-right"></td>
+                    }
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</body>
 </html>
