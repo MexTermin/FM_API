@@ -3,6 +3,7 @@ using FM_API.DTOS;
 using FMAPI.Helpers;
 using FMAPI.Model;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Rotativa.AspNetCore;
 using System.Globalization;
 
@@ -24,7 +25,7 @@ namespace FMAPI.Controllers
         }
 
         [HttpGet("{id:long}")]
-        public async Task<IActionResult> GeneratePDF(long id)
+        public async Task<string> GeneratePDF(long id)
         {
             // Variables
             object? allEstimateResponse;
@@ -138,7 +139,7 @@ namespace FMAPI.Controllers
             };
             model.LongestList = Math.Max(model.Expenses.Count(), model.Income.Count());
             ViewAsPdf report = new ViewAsPdf(model) { FileName = "reportefm.pdf" };
-            return report;
+            return JsonConvert.SerializeObject(new Dictionary<string, dynamic>() { { "buffer", report.BuildFile(ControllerContext).Result }, { "type", "aplication/pdf" } });
         }
     }
 }
