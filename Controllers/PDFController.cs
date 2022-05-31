@@ -65,7 +65,6 @@ namespace FMAPI.Controllers
                     {
                         ExpensesByCategory.Add(item.Category.Name, new PDFDescriptionModel { Estimate = item.Plan, category = item.Category.Name });
                     }
-                    ExpensesByCategory[item.Category.Name].difference = Math.Abs(ExpensesByCategory[item.Category.Name].Amount - ExpensesByCategory[item.Category.Name].Estimate);
                     providedExpenses += item.Plan;
                 }
 
@@ -79,7 +78,6 @@ namespace FMAPI.Controllers
                     {
                         IncomeByCategory.Add(item.Category.Name, new PDFDescriptionModel { Estimate = item.Plan, category = item.Category.Name });
                     }
-                    IncomeByCategory[item.Category.Name].difference = Math.Abs(IncomeByCategory[item.Category.Name].Amount - IncomeByCategory[item.Category.Name].Estimate);
                     providedIncome += item.Plan;
                 }
             }
@@ -117,25 +115,14 @@ namespace FMAPI.Controllers
 
             PDFModel model = new()
             {
-                Expenses = ExpensesByCategory.Select(x => new PDFDescriptionModel
-                {
-                    Amount = x.Value.Amount,
-                    category = x.Value.category,
-                    difference = x.Value.difference,
-                    Estimate = x.Value.Estimate
-                }).ToList(),
-                Income = IncomeByCategory.Select(x => new PDFDescriptionModel
-                {
-                    Amount = x.Value.Amount,
-                    category = x.Value.category,
-                    difference = x.Value.difference,
-                    Estimate = x.Value.Estimate
-                }).ToList(),
+                Expenses = ExpensesByCategory,
+                Income = IncomeByCategory,
                 ProvidedExpenses = providedExpenses,
                 ProvidedIncome = providedIncome,
                 TrueExpenses = trueExpenses,
-                TrueIncome = providedExpenses,
-                Month = CultureInfo.CreateSpecificCulture("es").DateTimeFormat.GetMonthName(budget.Month)
+                TrueIncome = trueIncome,
+                Month = CultureInfo.CreateSpecificCulture("es").DateTimeFormat.GetMonthName(budget.Month),
+                Categories = ExpensesByCategory.Keys.Union(IncomeByCategory.Keys)
             };
             model.LongestList = Math.Max(model.Expenses.Count(), model.Income.Count());
             ViewAsPdf report = new ViewAsPdf(model) { FileName = "reportefm.pdf" };

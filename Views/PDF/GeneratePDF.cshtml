@@ -61,7 +61,7 @@
             <tr>
                 <td colspan="2">Real</td>
                 <td colspan="2" class="text-right">
-                    @if (@Model.TrueExpenses < @Model.ProvidedExpenses)
+                    @if (@Model.TrueExpenses > @Model.ProvidedExpenses)
                     {
                         <span style="color:red;">@Model.TrueExpenses</span>
                     }
@@ -96,10 +96,10 @@
                 <td style="width:15%;" colspan="1">Diferencia</td>
             </tr>
 
-            @for (var i = 0; i < Model.LongestList; i++)
+            @foreach (var i in Model.Categories)
             {
                 <tr>
-                    @if (Model.Expenses.Count() > i)
+                    @if (Model.Expenses.ContainsKey(i))
                     {
                         var item = Model.Expenses[i];
                         <td style="width:15%;" colspan="1">@item.category</td>
@@ -120,7 +120,7 @@
                     {
                         <td style="width:50%;" colspan="4" class="text-right"></td>
                     }
-                    @if (Model.Income.Count() > i)
+                    @if (Model.Income.ContainsKey(i))
                     {
                         var item = Model.Income[i];
                         <td style="width:15%;" colspan="1">@item.category</td>

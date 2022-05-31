@@ -3,8 +3,9 @@
     public class PDFModel
     {
         public string Month { get; set; }
-        public List<PDFDescriptionModel> Income { get; set; }
-        public List<PDFDescriptionModel> Expenses { get; set; }
+        public Dictionary<string, PDFDescriptionModel> Income { get; set; }
+        public Dictionary<string, PDFDescriptionModel> Expenses { get; set; }
+        public IEnumerable<string> Categories { get; set; }
         public int TrueIncome { get; set; }
         public int TrueExpenses { get; set; }
         public int ProvidedIncome { get; set; }
