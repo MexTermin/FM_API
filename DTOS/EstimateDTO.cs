@@ -9,6 +9,8 @@ namespace FM_API.DTOS
 
         public long Id_category { get; set; }
 
+        public long Id_type { get; set; }
+
         public int Plan { get; set; }
 
         public long Id_budget { get; set; }
@@ -27,6 +29,7 @@ namespace FM_API.DTOS
         public int Plan { get; set; }
 
         public long Id_budget { get; set; }
+
         public long Id_Type { get; set; }
 
     }
