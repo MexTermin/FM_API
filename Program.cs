@@ -1,6 +1,4 @@
-using FM_API.Controllers;
 using FM_API.Persistance.Database;
-using FMAPI.Controllers;
 using FMAPI.Persistance.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -13,15 +11,11 @@ string url = $"http://0.0.0.0:{port}";
 string dbconnection = Environment.GetEnvironmentVariable("FMDATABASE");
 
 #region Cors
+
+var origins = "_allowOrigins";
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyHeader();
-        policy.AllowAnyMethod();
-        policy.AllowAnyOrigin();
-        policy.SetIsOriginAllowed(origin => true);
-    });
+    options.AddPolicy(name: origins, builder => { builder.WithOrigins("https://sensational-axolotl-61fbbd.netlify.app"); });
 });
 #endregion
 
@@ -64,7 +58,7 @@ builder.Services.AddTransient<TypeRepository>();
 #endregion
 
 var app = builder.Build();
-app.UseCors();
+app.UseCors(origins);
 
 if (app.Environment.IsDevelopment())
 {
