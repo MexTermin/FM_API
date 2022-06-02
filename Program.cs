@@ -12,10 +12,15 @@ string dbconnection = Environment.GetEnvironmentVariable("FMDATABASE");
 
 #region Cors
 
-var origins = "_allowOrigins";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: origins, builder => { builder.WithOrigins("https://sensational-axolotl-61fbbd.netlify.app"); });
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+        policy.AllowAnyOrigin();
+        policy.SetIsOriginAllowed(origin => true);
+    });
 });
 #endregion
 
@@ -58,7 +63,7 @@ builder.Services.AddTransient<TypeRepository>();
 #endregion
 
 var app = builder.Build();
-app.UseCors(origins);
+app.UseCors();
 
 if (app.Environment.IsDevelopment())
 {
