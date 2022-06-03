@@ -50,7 +50,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 #endregion
 
 // Rotativa Config
-Rotativa.AspNetCore.RotativaConfiguration.Setup(builder.Environment.ContentRootPath, "Rotativa");
+Rotativa.AspNetCore.RotativaConfiguration.Setup(builder.Environment.ContentRootPath, "./Rotativa");
 
 #region Region Repository
 builder.Services.AddTransient<EstimateRepository>();
