@@ -14,7 +14,7 @@ string dbconnection = Environment.GetEnvironmentVariable("FMDATABASE");
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
+    options.AddPolicy("AllowAnyOrigin", policy =>
     {
         policy.AllowAnyHeader();
         policy.AllowAnyMethod();
@@ -63,7 +63,7 @@ builder.Services.AddTransient<TypeRepository>();
 #endregion
 
 var app = builder.Build();
-app.UseCors();
+app.UseCors("AllowAnyOrigin");
 
 if (app.Environment.IsDevelopment())
 {
