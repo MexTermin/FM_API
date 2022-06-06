@@ -1,6 +1,9 @@
 using FM_API.Persistance.Database;
 using FMAPI.Persistance.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -50,7 +53,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 #endregion
 
 // Rotativa Config
-Rotativa.AspNetCore.RotativaConfiguration.Setup(builder.Environment.ContentRootPath, "./Rotativa");
+Rotativa.AspNetCore.RotativaConfiguration.Setup(builder.Environment.ContentRootPath);
 
 #region Region Repository
 builder.Services.AddTransient<EstimateRepository>();
@@ -61,6 +64,13 @@ builder.Services.AddTransient<UserRepository>();
 builder.Services.AddTransient<CategoryRepository>();
 builder.Services.AddTransient<TypeRepository>();
 #endregion
+
+builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(@"temp-keys\"))
+                .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
+                {
+                    EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
+                    ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
+                });
 
 var app = builder.Build();
 app.UseCors("AllowAnyOrigin");
@@ -77,4 +87,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.Run(url);
